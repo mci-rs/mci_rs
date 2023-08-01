@@ -1,0 +1,82 @@
+// Region
+.region--hero {
+  position: relative;
+  height: 500px;
+  background: {
+    repeat: no-repeat;
+    image: $hero-gradient, url('../images/code-optimized.jpg') ;
+    position: top center;
+    size: 100%;
+};
+
+  @media all and (max-width: $md){
+    background-size: cover;
+  }
+   &.blog-d8-layout {
+       background: {
+         image: $hero-gradient, url('https://cdn-images-1.medium.com/max/1024/1*4T4y8zMKShv-50v_4OszAA.jpeg');
+         position-y: 67%;
+       };
+  }
+  &.blog-d8-migrate-1{
+      background: {
+        image: $hero-gradient, url('../images/blog/migration.png');
+        position-y: 40%;
+      };
+  }
+  &.blog-d8-migrate-2{
+    background: {
+      image: $hero-gradient, url('../images/blog/migration.png');
+      position-y: 40%;
+    };
+  }
+  &.blog-d8-migrate-3{
+    background: {
+      image: $hero-gradient, url('../images/blog/migration.png');
+      position-y: 40%;
+    };
+  }
+}
+
+// Component
+.hero {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: 0 10px;
+  color: white;
+  text-align: center;
+  transform: translateY(calc(-50% + 42px));
+
+  &__title {
+    font: {
+      weight: 700;
+      size: 36px;
+    };
+    text-transform: uppercase;
+    width: 79%;
+    margin: auto;
+  }
+
+  &__text {
+    margin: 15px 0;
+    font:  {
+      size: 14px;
+      weight: 200;
+    };
+    .dateposted{
+      display: inline-block;
+    }
+    letter-spacing: 1px;
+  }
+
+  &__action {
+    @include button($salmon);
+    @include shiny(rgba(255,255,255,0.75));
+
+    margin: 25px auto;
+    color: white;
+  }
+}

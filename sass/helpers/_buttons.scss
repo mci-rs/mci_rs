@@ -1,0 +1,79 @@
+// Button mixins.
+@mixin button($border-color: inherit, $border-width: 2px, $max-width: 200px) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: #{$max-width};
+  height: 45px;
+  margin: 25px auto;
+  padding: 10px;
+  border: #{$border-width} solid #{$border-color};
+  border-radius: 42px;
+  font-weight: 600;
+  cursor: pointer;
+  color: inherit;
+  background-color: $transparent;
+  white-space: nowrap;
+  overflow: hidden;
+
+  // In case we are making button out of link(<a>Link</a>)
+  &,
+  &:hover,
+  &:active,
+  &:focus,
+  &:visited {
+    text-decoration: none;
+  }
+
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+}
+
+///* Quidel */
+//%button--quidel {
+//  display: block;
+//  overflow: hidden;
+//  color: #7986cb;
+//  background: #7986cb;
+//  transition: color 0.3s cubic-bezier(0.75, 0, 0.125, 1);
+//
+//  &:hover {
+//    color: #37474f;
+//
+//    &::before {
+//      -webkit-transform: translate3d(0, 0, 0);
+//      transform: translate3d(0, 0, 0);
+//    }
+//  }
+//
+//  &::before,
+//  &::after {
+//    content: '';
+//    position: absolute;
+//    z-index: -1;
+//    border-radius: inherit;
+//  }
+//
+//  &::after {
+//    top: 2px;
+//    left: 2px;
+//    right: 2px;
+//    bottom: 2px;
+//    background: #fff;
+//  }
+//
+//  &::before {
+//    top: 0;
+//    left: 0;
+//    width: 100%;
+//    height: 100%;
+//    transform: translate3d(0, 100%, 0);
+//    transition: transform 0.3s cubic-bezier(0.75, 0, 0.125, 1);
+//    background: #37474f;
+//  }
+//
+//}
+

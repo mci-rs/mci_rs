@@ -1,0 +1,172 @@
+.process-text-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding-top: 75px;
+
+  h2 {
+    text-align: center;
+    font: {
+      weight: 600;
+      size: 32px;
+    };
+    color: $text;
+    margin: 20px 0;
+
+    @media all and (min-width: $sm) {
+      margin: 40px 0;
+    }
+  }
+
+  .process-text {
+    line-height: 1.4;
+    font: {
+      size: 18px;
+    };
+    text-align: center;
+    color: $text;
+    padding: 0 20px;
+  }
+
+  .process-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+
+    &:nth-child(1) {
+      border-bottom: 2px solid $blue-gray;
+    }
+    &:nth-child(2) {
+      border-bottom: 2px solid $blue-gray;
+    }
+    &:last-child {
+      border-top: 2px solid $blue-gray;
+    }
+
+    @media all and (min-width: $sm) {
+      flex-direction: row;
+    }
+  }
+
+  .icon {
+    display: flex;
+    padding: 0 10px;
+    border: {
+      //right: 2px solid $blue-gray;
+    };
+
+    @media all and (min-width: $sm) {
+      padding: 50px 20px;
+    }
+
+    img {
+      width: 150px;
+      align-self: center;
+    }
+  }
+
+  h3 {
+    color: $purple-light;
+    font: {
+      weight: bold;
+      size: 30px;
+    };
+    margin: 15px 0 30px;
+    text-align: center;
+    text-transform: uppercase;
+
+    @media all and (min-width: $sm) {
+      text-align: left;
+    }
+  }
+
+  .right-col {
+    padding: 0 20px;
+    align-self: center;
+  }
+
+  .proc-description {
+    margin: {
+      bottom: 20px;
+    };
+    line-height: 1.4;
+    font-size: 16px;
+    text-align: center;
+
+    @media all and (min-width: $sm) {
+      text-align: left;
+    }
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding-left: 25px;
+
+    @media all and (min-width: $sm) {
+      flex-direction: row;
+      padding-left: 0;
+    }
+
+    li {
+      margin: {
+        top: 20px;
+      };
+
+      flex-basis: 33%;
+      &:before {
+        content: '';
+        display: inline-block;
+        vertical-align: middle;
+        width: 15px;
+        height: 15px;
+        margin: {
+          right: 5px;
+        };
+        background: {
+          image: url('../images/checkmark.png');
+          size: 100%;
+          repeat: no-repeat;
+          position: center;
+        };
+      }
+    }
+  }
+  &.article{
+    word-break: break-word;
+    padding: 40px 10%;
+     p {
+       text-align: left;
+       padding: 10px 0;
+       word-break: break-word;
+     }
+    ul {
+      list-style: disc;
+      li{
+        margin-left: 35px;
+      }
+    }
+    ol li{
+        margin-left: 35px;
+    }
+    .article-image{
+      margin: 10px 0;
+      padding: 15px 0;
+      border:2px solid $blue-gray;
+    }
+    pre{
+      background-color: $blue-gray;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 18px;
+      color: #333;
+      overflow: scroll;
+      .c31{
+        font-weight: 700;
+      }
+    }
+
+  }
+}

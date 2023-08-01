@@ -1,0 +1,34 @@
+.section {
+  @include padded-content;
+}
+
+/* Prevent scroll when modal is active */
+body.modal-active{
+  overflow: hidden;
+}
+
+//.darken {
+//  position: fixed;
+//  z-index: 9;
+//  top: 0;
+//  left: 0;
+//  right: 0;
+//  bottom: 0;
+//  height: 0;
+//  width: 100%;
+//  opacity: 0;
+//  background-color: rgba(0, 0, 0, 0.75);
+//  //transition: opacity 0.5s ease-in-out;
+//  transition: opacity 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+//
+//  @media all and (max-width: $md - 1px) {
+//    &.active {
+//      opacity: 100;
+//      height: 100vh;
+//    }
+//  }
+//
+//  @media all and (min-width: $md) {
+//    display: none;
+//  }
+//}

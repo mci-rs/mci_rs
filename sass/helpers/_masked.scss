@@ -1,0 +1,109 @@
+/** ALL OF THESE ARE BASED ON ORIGINAL CONCEPT by https://github.com/robin-dela/ **/
+@keyframes masked--r {
+  0% {
+    mask-position: 0 0;
+  }
+
+  100% {
+    mask-position: 100% 0;
+  }
+}
+
+@keyframes masked--l {
+  0% {
+    mask-position: 0 0;
+  }
+
+  100% {
+    mask-position: -100% 0;
+  }
+}
+
+@keyframes masked--right {
+  0% {
+    mask-position: 100% 0;
+  }
+
+  100% {
+    mask-position: 0 0;
+  }
+}
+
+@keyframes masked--left {
+  0% {
+    mask-position: -100% 0;
+  }
+
+  100% {
+    mask-position: 0 0;
+  }
+}
+
+@mixin mask($back-color, $text-color, $url, $x-coordinate, $y-coordinate) {
+  background-color: $back-color;
+  mask: url($url);
+  mask-size: $x-coordinate $y-coordinate;
+  color: $text-color;
+}
+
+/**
+ * CTA button. Html element implementing it must have [title=""] attribute!
+ */
+@mixin button-mask(
+  $back-color: black,
+   $text-color: white,
+    $url: '../images/sprites/urban-sprite-flipped.png',
+    $steps: 29,
+     $x-coordinate: 3000%, $y-coordinate: 100%) {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 200px;
+  min-height: 40px;
+  margin: 25px auto;
+  border: 0;
+  text-decoration: none;
+  overflow: hidden;
+  transition: color .7s ease-in-out;
+
+  &::before,
+  &::after {
+    content: attr(title);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: inherit;
+    min-width: inherit;
+    height: inherit;
+    min-height: inherit;
+    border: 1px solid;
+    border-radius: inherit;
+  }
+
+  &::before {
+    @include mask(#{$back-color}, #{$text-color}, #{$url}, #{$x-coordinate}, #{$y-coordinate});
+    z-index: 2 !important;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-rendering: optimizeLegibility;
+    font-weight: inherit;
+    font-size: inherit;
+    animation: masked--right 0.64s steps(#{$steps}) forwards;
+  }
+
+  &::after {
+    font-size: 0;
+  }
+
+  &:hover {
+    &::before {
+      animation: masked--r 0.64s steps(#{$steps}) forwards;
+    }
+  }
+}

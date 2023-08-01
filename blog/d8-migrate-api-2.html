@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MCI | Drupal 8 Migrate API Part 2</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../scripts/SmoothScroll.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHJi08DRS2Jhj03KrqGnkJ0969gMFqw_Y&callback=initMap">
+    </script>
+
+    <script src="../scripts/main.js"></script>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../images/favicon/safari-pinned-tab.svg" color="#98336e">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Open Graph -->
+    <meta property="og:image:height" content="312">
+    <meta property="og:image:width" content="596">
+    <meta property="og:title" content=">MCI WEBSITE | Drupal 8 Migrate api pt2">
+    <meta property="og:description" content="Drupal 8 Migration - part 2 - migrating field collection to paragraphs">
+    <meta property="og:url" content="http://www.mci.rs/blog/d8-migrate-api-2.html">
+    <meta property="og:image" content="http://www.mci.rs/images/migrationapi2.jpg">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="We provide solutions that are sane and justified from both business and tech perspectives">
+    <meta name="twitter:title" content="MCI WEBSITE | Drupal 8 Migrate api pt2">
+    <meta name="twitter:description" content="Drupal 8 Migration - part 2 - migrating field collection to paragraphs">
+    <!-- Twitter Summary card images must be at least 120x120px -->
+    <meta name="twitter:image" content="http://www.mci.rs/images/migrationapi2.jpg">
+    <!-- Meta description -->
+    <meta name="description" content="Official Mci website, a software developer company, focused on drupal, wordpress, vuejs, react, located in Novi Sad, Sestara Ninković 2a" />
+    <meta itemprop="datePublished" content="2018-11-09T05:40:51+01:00">
+
+
+</head>
+<body class="blog">
+<div class="page-content">
+    <header id="navigation-region" class="region--header">
+        <div class="header--content">
+            <div class="logo" itemscope itemtype="http://schema.org/LocalBusiness">
+                <a href="../index.html"><img itemprop="logo" src="../images/logo-white.png" alt="MCI logo"></a>
+            </div>
+            <div class="nav">
+                <div class="nav__toggle" id="hamburger-1">
+                    <span class="line"></span>
+                    <span class="line"></span>
+                    <span class="line"></span>
+                </div>
+                <nav class="nav__menu">
+                    <a href="../index.html#what-we-do">What We Do</a>
+                    <a href="../index.html#skills">Our Skills</a>
+                    <a href="../index.html#processes">Our Process</a>
+                    <a href="../index.html#team">Our Team</a>
+                    <div  class="menulink modal--activate">Contact Us</div>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <section class="region--hero blog-d8-migrate-2">
+        <div class="hero">
+            <h1 class="hero__title"> Migrate Field Collection to Paragraphs from Drupal 7 to Drupal 8</h1>
+            <div class="hero__text">
+                Development |  <div class="dateposted" itemprop="dateModified" content="2018-11-09T05:40:51+02:00"><time> 9 Nov 18</time></div>
+            </div>
+        </div>
+    </section>
+    <main class="region--content">
+        <div id="processes" class="process-text-section article">
+            <p class="process-text article">Very often you will find yourself in situation that you need to do migrate from field collection to paragraphs bundles. In this example we will show you how to do on right way. If you reading this and you didn’t do previous migration example with ‘Blog’ nodes, it may be better for you to run through that lesson first.</p>
+            <p class="process-text article">In this example we will migrate ‘Company’ content type with field collection field bundle ‘Contact’. You can just go on and extend previous module.</p>
+            <p class="process-text article"><strong>First step</strong></p>
+            <p class="process-text article">Start with vanilla drupal 7 site. Install Field Collection module and create ‘Contact’ bundle. Contact bundle will contain field_website(link), field_email (email/textfield), field_phone(textfield). After that create Company content type with field Contact (field_contact) and assign ‘contact’ bundle to that field (reference field).
+                Add some nodes and export database.
+            </p>
+            <p class="process-text article">Create vanilla drupal 8 site. Install paragraphs module. Create exactly same bundle as for drupal 7 but use paragraphs module instead of field collections.</p>
+            <p class="process-text article">You can use docker file from previous migration.<strong>Mail and link modules are needed!</strong></p>
+            <h2>It’s time for migration </h2>
+            <p class="process-text article">
+                Folder structure:
+            </p>
+            <figure>
+                <img src="../images/blog/migrate16.png" alt="Zoom with default options" class="medium-zoom-image">
+            </figure>
+            <p class="process-text">As before we are starting from group config file.</p>
+            <p class="process-text">Create <strong>migrate_plus.migration_group.d7.yml</strong> file .</p>
+            <pre>
+
+            id: d7
+            label: D7 imports
+            description: Migration from the legacy D7 site
+            source_type: Drupal 7
+            shared_configuration:
+             source:
+               key: old_drupal
+
+            </pre>
+            <p class="process-text">Source key points on drupal 7 database.</p>
+            <p class="process-text">Now we need to separate paragraphs data from content type, make it as two different migrations.</p>
+            <p class="process-text">So, we will migrate paragraphs/field collections data first.</p>
+            <p class="process-text"><strong>Migrate_plus.migration.d7_field_collection_contacts.yml</strong></p>
+            <pre>
+
+            langcode: en
+            status: true
+            dependencies: {  }
+            id: d7_field_collection_contacts
+            class: null
+            field_plugin_method: null
+            cck_plugin_method: null
+            migration_tags:
+             - 'Drupal 7'
+            migration_group: d7
+            label: Contacts
+            source:
+             plugin: d7_field_collection_item
+             key: old_drupal
+            #  field_name is used in our custom plugin to get data about this field_collection_item.
+             field_name: field_contact
+            process:
+             field_email:
+               plugin: iterator
+               source: field_email
+               process:
+                 value: value
+               revision_id: revision_id
+             field_phone:
+               plugin: iterator
+               source: field_phone
+               process:
+                 value: value
+               revision_id: revision_id
+             field_website:
+               plugin: iterator
+               source: field_website
+               process:
+                 uri: url
+                 title: title
+               revision_id: revision_id
+            destination:
+             plugin: 'entity_reference_revisions:paragraph'
+             default_bundle: contact
+            migration_dependencies:
+             required: {  }
+             optional: {  }
+
+            </pre>
+            <p class="process-text article">Now we need source plugin for Field Collection.</p>
+            <p class="process-text article"><strong>FieldCollection.php</strong></p>
+            <pre>
+
+            namespace Drupal\custom_migrate\Plugin\migrate\source;
+
+            use Drupal\migrate\Row;
+            use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
+
+            /**
+            * d7_field_collection_item source.
+            *
+            * @MigrateSource(
+            *   id = "d7_field_collection_item"
+            * )
+            */
+            class FieldCollection extends FieldableEntity {
+
+             /**
+              * {@inheritdoc}
+              */
+             public function query() {
+               // Select node in its last revision.
+               $query = $this->select('field_collection_item', 'fci')
+                 ->fields('fci', [
+                   'item_id',
+                   'field_name',
+                   'revision_id'
+                 ]);
+               if (isset($this->configuration['field_name'])) {
+                 $query->innerJoin('field_data_' . $this->configuration['field_name'], 'fd', 'fd.' . $this->configuration['field_name'] . '_value = fci.item_id');
+                 $query->fields('fd', ['entity_type', 'bundle', 'entity_id', $this->configuration['field_name'] . '_revision_id']);
+                 $query->condition('fci.field_name', $this->configuration['field_name']);
+               }
+               return $query;
+             }
+
+            </pre>
+            <p class="process-text article"><strong>prepareRow() method.</strong></p>
+            <pre>
+
+            /**
+            * {@inheritdoc}
+            */
+            public function prepareRow(Row $row) {
+             // If field specified, get field revision ID so there aren't issues mapping.
+             if(isset($this->configuration['field_name'])) {
+               $row->setSourceProperty('revision_id', $row->getSourceProperty($this->configuration['field_name'] . '_revision_id'));
+             }
+
+             // Get field API field values.
+             foreach (array_keys($this->getFields('field_collection_item', $row->getSourceProperty('field_name'))) as $field) {
+               $item_id = $row->getSourceProperty('item_id');
+               $revision_id = $row->getSourceProperty('revision_id');
+               $row->setSourceProperty($field, $this->getFieldValues('field_collection_item', $field, $item_id, $revision_id));
+             }
+             return parent::prepareRow($row);
+            }
+
+            </pre>
+            <p class="process-text article"><strong>Here we’ll need two methods, fields() and getIds() method, like we did in the previous example.</strong></p>
+            <pre>
+
+            /**
+            * {@inheritdoc}
+            */
+            public function fields() {
+             $fields = [
+               'item_id' => $this->t('Item ID'),
+               'revision_id' => $this->t('Revision ID'),
+               'field_name' => $this->t('Name of field')
+             ];
+             return $fields;
+            }
+            /**
+            * {@inheritdoc}
+            */
+            public function getIds() {
+             $ids['item_id']['type'] = 'integer';
+             $ids['item_id']['alias'] = 'fci';
+             return $ids;
+            }
+
+            </pre>
+            <p class="process-text article">We are done with paragraphs data.</p>
+            <p class="process-text article">Hit <strong>drush migrate-status</strong></p>
+            <figure>
+                <img src="../images/blog/migrate17.png" alt="Zoom with default options" class="medium-zoom-image">
+            </figure>
+            <p class="process-text article">As you can see here is our migration. You can see migration state, total of data that are ready for migration and etc.
+            </p>
+            <p class="process-text article">Hit <strong>drush migrate:import d7_field_collection_contacts</strong>and finish with paragraphs data.</p>
+            <p class="process-text article">Now you can check <strong>paragraph__field_email  |  paragraph__field_website  |  paragraph__field_phone </strong> tables in drupal 8 site.</p>
+            <p class="process-text article">Ok, first part is done. Let’s assign these data to <strong>Company</strong> content type. Create <strong>migrate_plus.migration.d7_node_company.yml</strong></p>
+            <pre>
+
+            langcode: en
+            status: true
+            dependencies: {  }
+            id: d7_node_company
+            class: null
+            field_plugin_method: null
+            cck_plugin_method: null
+            migration_tags:
+             - 'Drupal 7'
+             - Content
+            migration_group: d7
+            label: 'Nodes (Company)'
+            source:
+             plugin: d7_node
+            #  key: old_drupal
+             node_type: company
+            process:
+             nid: nid
+             vid: vid
+             langcode:
+               plugin: default_value
+               source: language
+               default_value: und
+             title: title
+             uid: node_uid
+             status: status
+             created: created
+             changed: changed
+             promote: promote
+             sticky: sticky
+             revision_uid: revision_uid
+             revision_log: log
+             revision_timestamp: timestamp
+             body:
+               plugin: iterator
+               source: body
+               process:
+                 value: value
+                 format:
+                   -
+                     plugin: static_map
+                     bypass: true
+                     source: format
+                     map:
+                       - null
+                   -
+                     plugin: skip_on_empty
+                     method: process
+                   -
+                     plugin: migration
+                     migration:
+                       - d6_filter_format
+                       - d7_filter_format
+                     source: format
+             field_contact:
+               -
+                 plugin: skip_on_empty
+                 method: process
+                 source: field_contact_new
+               -
+                 plugin: migration_lookup
+                 migration: d7_field_collection_contacts
+                 no_stub: true
+               -
+                 plugin: iterator
+                 process:
+                   target_id: '0'
+                   target_revision_id: '1'
+            destination:
+             plugin: 'entity:node'
+             default_bundle: company
+            migration_dependencies:
+            #  required:
+            ##    - d7_user
+            ##    - d7_node
+             optional:
+               - d7_field_instance
+               - d6_filter_format
+               - d7_filter_format
+
+            </pre>
+            <p class="process-text ">Now we need one more step. We need to change the value of source field_contact in a hook_migrate_MIGRATION_ID_prepare_row in our custom module's .module file; this is done because we need to pass the values to the migration_lookup plugin keyed with item_id.</p>
+            <pre>
+
+            use Drupal\migrate\Plugin\MigrateSourceInterface;
+            use Drupal\migrate\Plugin\MigrationInterface;
+            use Drupal\migrate\Row;
+
+
+
+            /**
+             * Implements hook_migrate_MIGRATION_ID_prepare_row().
+             */
+            function custom_migrate_migrate_d7_node_company_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
+              $values = $row->getSourceProperty('field_contact');
+              $value_new = [];
+              if ($values) {
+                foreach ($values as $value) {
+                  $value_new[] = ['item_id' => $value['value']];
+                }
+                $row->setSourceProperty('field_contact_new', $value_new);
+              }
+            }
+
+            </pre>
+            <p class="process-text ">That’s all, now we can import nodes from old database to new one.</p>
+            <p class="process-text "><strong>drush migrate:import d7_node_company</strong></p>
+            <p class="process-text ">Download code:</p>
+            <p class="process-text "><a href="https://bitbucket.org/dzoda/custom-migration/src/master/">Migrate field collections from Drupal 7 to Paragraphs in drupal 8</a></p>
+
+        </div>
+    </main>
+    <div id="medium" class="medium">
+        <h2>RELATED ARTICLES</h2>
+        <div class="medium-wrapper">
+
+
+            <a href="../blog/d8-migrate-api-3.html" class="article-link">
+                <div class="article"><div class="teaser-image">
+                    <figure>
+                        <img itemprop="image" src="../images/blog/migration.png"
+                             alt="drupal 8 migrate api 3">
+                        <figcaption>Caption for the&nbsp;image</figcaption>
+                    </figure>
+                </div>
+                    <h3>Drupal 8 | Migration api part 3</h3>
+                    <div class="read-more">Drupal 8 Migrate Api - Migrating users...</div>
+                </div>
+            </a>
+
+          <a href="../blog/d8-migrate-api-4.html" class="article-link">
+            <div class="article"><div class="teaser-image">
+              <figure>
+                <img itemprop="image" src="../images/blog/migration.png"
+                     alt="drupal 8 migrate api 4">
+                <figcaption>Caption for the&nbsp;image</figcaption>
+              </figure>
+            </div>
+              <h3>Drupal 8 | Migration api part 4</h3>
+              <div class="read-more">Drupal 8 Migrate Api - Migrating custom entity...</div>
+            </div>
+          </a>
+
+            <a href="../blog/d8-layout-api.html" class="article-link">
+                <div class="article"><div class="teaser-image">
+                    <figure>
+                        <img alt="drupal 8 Layout api" src="../images/blog/layout-teaser.png">
+                        <figcaption>Caption for the&nbsp;image</figcaption>
+                    </figure>
+                </div>
+                    <h3>Drupal 8 | Layout api</h3>
+                    <div class="read-more">New Layout Api in Drupal 8 core is great for handling layouts...</div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+    <footer class="region--footer">
+        <div class="footer__map">
+            <div id="map"></div>
+        </div>
+        <div class="footer--content">
+            <div class="footer__first">
+                <div class="footer__logo">
+                    <img src="../images/logo-white.png" alt="">
+                </div>
+                <dl class="footer__social">
+                    <dt class="footer__social--label">Get in touch</dt>
+                    <dd class="footer__social--links">
+                        <a class="footer__social--link medium-logo" target="_blank" href="https://medium.com/mci-software" title="Medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="31" height="24"><path class="social-logo" fill="#ffffff" d="M3.813 5.049a.97.97 0 0 0-.375-.972L.598.713V.189h8.748l6.729 14.804L22.055.189h8.301v.524L27.963 3.03c-.226.15-.3.449-.3.672v16.973c-.073.224.075.522.3.672l2.317 2.317v.524H18.541v-.524l2.469-2.392c.224-.225.224-.299.224-.673V6.843L14.43 24.04h-.897L5.606 6.843v11.514c-.075.449.075.972.449 1.346l3.14 3.814v.522H.224v-.522l3.141-3.814c.374-.374.523-.822.374-1.346V5.049h.074z"/></svg>
+                        </a>
+                        <a class="footer__social--link linkedin" target="_blank" href="https://www.linkedin.com/company/mci-software/" title="Linkedin">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path  class="social-logo" fill="#ffffff" d="M23.898 15.202V24h-5.1v-8.209c0-2.063-.736-3.47-2.584-3.47-1.41 0-2.248.949-2.617 1.865-.135.327-.17.784-.17 1.244V24H8.326s.069-13.904 0-15.345h5.102v2.175l-.033.049h.033v-.049c.678-1.044 1.889-2.536 4.6-2.536 3.355.001 5.87 2.194 5.87 6.908zM2.989 1.259c-1.746 0-2.888 1.145-2.888 2.65 0 1.472 1.108 2.653 2.819 2.653h.035c1.779 0 2.886-1.18 2.886-2.653-.033-1.505-1.107-2.65-2.852-2.65zM.404 24h5.101V8.655H.404V24z"/></svg>
+                        </a>
+                        <a class="footer__social--link facebook" target="_blank" href="https://www.facebook.com/MCI-software-215688095700760/" title="Facebook">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path class="social-logo" fill="#ffffff" d="M9.235 4.94v3.262H6.844v3.99h2.391V24.05h4.912V12.192h3.295s.309-1.913.457-4.004h-3.734V5.459c0-.407.535-.956 1.066-.956h2.674V.35h-3.639C9.113.349 9.235 4.344 9.235 4.94z"/></svg>
+                        </a>
+                    </dd>
+                </dl>
+            </div>
+            <ul class="footer__nav">
+                <li class="menu-item"><a href="#">What We Do</a></li>
+                <li class="menu-item"><a href="#">Our Skills</a></li>
+                <li class="menu-item"><a href="#">Our Results</a></li>
+                <li class="menu-item"><a href="#">Our Team</a></li>
+                <li class="menu-item"><a href="#">Contact Us</a></li>
+            </ul>
+            <dl class="footer__contact" itemscope itemtype="http://schema.org/LocalBusiness">
+                <dt class="phone label">Telephone:</dt>
+		<dd class="phone val" itemprop="telephone"><a href="tel:+381631128642">+381 63 112 8642</a></dd>
+                <dt class="address label">Address:</dt>
+                <dd class="address val" itemprop="address">Sestara Ninković 2a, Novi Sad, Serbia</dd>
+                <dt class="e-mail label">e-mail:</dt>
+                <dd class="e-mail val"><a href="mailto:contact@mci.com" itemprop="email">info@mci.rs</a></dd>
+                <dt class="copyright label">Copyright:</dt>
+                <dd class="copyright val">© MCI <span class="year"></span>. All Rights Reserved.</dd>
+            </dl>
+        </div>
+    </footer>
+</div>
+<div class="modal">
+    <div role="dialog" aria-modal="true" class="contact">
+        <h3 class="contact__title">Contact Us</h3>
+        <p class="contact__intro">Got a project? We’d love to hear from you. Send us a message and we’ll respond as soon as possible.</p>
+        <button class="contact__close">Close</button>
+        <form id="contact" class="contact__form" method="post" enctype="application/x-www-form-urlencoded" action="https://formspree.io/info@mci.rs">
+            <label for="username" class="contact__elem">
+                Name
+                <input type="text" id="username" name="username" />
+            </label>
+            <label for="email" class="contact__elem">
+                Email
+                <input type="email" id="email" name="email" aria-required="true" aria-invalid="false" />
+            </label>
+            <label for="message" class="contact__elem">
+                Message
+                <textarea id="message" name="message" cols="40" rows="10" class="contact__text" aria-invalid="false"></textarea>
+            </label>
+            <input type="text" name="_gotcha" title="gotcha" style="display:none" />
+            <div class="contact__elem">
+                <input type="submit" value="Send Message" />
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../scripts/medium-zoom.js"></script>
+</body>
+</html>

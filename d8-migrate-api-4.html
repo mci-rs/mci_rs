@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MCI | Drupal 8 Migrate API Part 4</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../scripts/SmoothScroll.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHJi08DRS2Jhj03KrqGnkJ0969gMFqw_Y&callback=initMap">
+    </script>
+
+    <script src="../scripts/main.js"></script>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../images/favicon/safari-pinned-tab.svg" color="#98336e">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Open Graph -->
+    <meta property="og:image:height" content="312">
+    <meta property="og:image:width" content="596">
+    <meta property="og:title" content="MCI WEBSITE | Drupal 8 Migrate api pt4">
+    <meta property="og:description" content="Drupal 8 Migration - part 4 - migrating custom entity">
+    <meta property="og:url" content="http://www.mci.rs/blog/d8-migrate-api-4.html">
+    <meta property="og:image" content="http://www.mci.rs/images/migrationapi4.jpg">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="We provide solutions that are sane and justified from both business and tech perspectives">
+    <meta name="twitter:title" content="MCI WEBSITE | Drupal 8 Migrate api pt4">
+    <meta name="twitter:description" content="Drupal 8 Migration - part 4 - migrating custom entity">
+    <!-- Twitter Summary card images must be at least 120x120px -->
+    <meta name="twitter:image" content="http://www.mci.rs/images/migrationapi4.jpg">
+    <!-- Meta description -->
+    <meta name="description" content="Official Mci website, a software developer company, focused on drupal, wordpress, vuejs, react, located in Novi Sad, Mite Ruzica 2" />
+    <meta itemprop="datePublished" content="2018-11-22T05:40:51+01:00">
+</head>
+<body class="blog">
+<div class="page-content">
+    <header id="navigation-region" class="region--header">
+        <div class="header--content">
+            <div class="logo" itemscope itemtype="http://schema.org/LocalBusiness">
+                <a href="../index.html"><img itemprop="logo" src="../images/logo-white.png" alt="MCI logo"></a>
+            </div>
+            <div class="nav">
+                <div class="nav__toggle" id="hamburger-1">
+                    <span class="line"></span>
+                    <span class="line"></span>
+                    <span class="line"></span>
+                </div>
+                <nav class="nav__menu">
+                    <a href="../index.html#what-we-do">What We Do</a>
+                    <a href="../index.html#skills">Our Skills</a>
+                    <a href="../index.html#processes">Our Process</a>
+                    <a href="../index.html#team">Our Team</a>
+                    <div  class="menulink modal--activate">Contact Us</div>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <section class="region--hero blog-d8-migrate-3">
+        <div class="hero">
+            <h1 class="hero__title"> Migrate nodes from Drupal 7 to custom entity in Drupal 8</h1>
+            <div class="hero__text">
+                Development | <div class="dateposted" itemprop="dateModified" content="2018-11-22T05:40:51+02:00"><time> 22 Nov 18</time></div>
+            </div>
+        </div>
+    </section>
+    <main class="region--content">
+        <div id="processes" class="process-text-section article">
+            <p class="process-text article">In this section we will show you how to migrate nodes from drupal 7 into a <strong>custom content entity</strong>
+              in drupal 8.
+              If you didn’t run through previous lessons I would suggest you to do it first.
+            </p>
+            <p class="process-text article">For this lesson you can use the same docker-compose.yml file as previous.</p>
+          <h3>Let’s start</h3>
+
+          <ul class="article-list">
+            <p class="process-text article">Build up vanilla drupal 7 site.
+              Create <strong>book </strong> content type with fields listed below:</p>
+            <li><p class="process-text ">Title (default)</p></li>
+            <li><p class="process-text ">Body (default)</p></li>
+            <li><p class="process-text ">field_image</p></li>
+            <li><p class="process-text ">field_price (integer)</p></li>
+            <li><p class="process-text ">field_isbn (integer)</p></li>
+          </ul>
+          <p class="process-text article">Create few nodes of book content type
+            so you have enough stuff for migration. Export database.sql
+            file.</p>
+          <p class="process-text article">Now you have to install vanilla drupal
+            8 site. Make sure your drupal console works correctly. We will use
+            drupal console to generate module and custom content entity.</p>
+          <p class="process-text article">Jump into php container and type
+            ‘drupal’ if you don’t have drupal console installed you will see
+            message like this one:</p>
+
+          <figure>
+            <img src="../images/blog/migrate18.png"
+                 alt="Zoom with default options" class="medium-zoom-image">
+          </figure>
+
+          <p class="process-text article">Just type ‘composer require
+            drupal/console:~1.0 --prefer-dist --optimize-autoloader’ and
+            installation will start.</p>
+
+          <p class="process-text article">Now when you type ‘drupal’ the
+            commands for auto generate should be listed.</p>
+
+          <figure>
+            <img src="../images/blog/migrate19.png"
+                 alt="Zoom with default options" class="medium-zoom-image">
+          </figure>
+
+
+          <p class="process-text article">Ok, we are ready to continue.
+            Create new module <strong>storage_module</strong>. You can do it
+            easy by typing
+            <strong>drupal generate:module</strong> or just <strong>drupal
+              gm </strong> (alias).</p>
+
+          <p class="process-text article">This module we will use for our custom
+            content entity. When module is created, we are ready to create
+            custom content entity.</p>
+
+          <p class="process-text article">Also we will use drupal console for
+            that job.
+            Just type <strong>drupal generate:entity:content</strong> or
+            <strong>drupal geco</strong> and
+            generate book custom entity.</p>
+
+          <p class="process-text article">When entity is created we need to
+            modify entity fields. Make the same fields as for book content type
+            in drupal 7.</p>
+
+          <figure>
+            <img src="../images/blog/migrate20.png"
+                 alt="Zoom with default options" class="medium-zoom-image">
+          </figure>
+
+
+          <p class="process-text article"><strong> Book.php </strong> is the main file for our
+            custom content entity, all you need is to modify fields in this
+            file. </p>
+
+          <p class="process-text article">Here is how it should looks like:</p>
+
+
+          <pre>
+class Book extends RevisionableContentEntityBase implements BookInterface {
+
+ use EntityChangedTrait;
+
+ /**
+  * {@inheritdoc}
+  */
+ public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
+   parent::preCreate($storage_controller, $values);
+   $values += [
+     'user_id' => \Drupal::currentUser()->id(),
+   ];
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ protected function urlRouteParameters($rel) {
+   $uri_route_parameters = parent::urlRouteParameters($rel);
+
+   if ($rel === 'revision_revert' && $this instanceof RevisionableInterface) {
+     $uri_route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
+   }
+   elseif ($rel === 'revision_delete' && $this instanceof RevisionableInterface) {
+     $uri_route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
+   }
+
+   return $uri_route_parameters;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function preSave(EntityStorageInterface $storage) {
+   parent::preSave($storage);
+
+   foreach (array_keys($this->getTranslationLanguages()) as $langcode) {
+     $translation = $this->getTranslation($langcode);
+
+     // If no owner has been set explicitly, make the anonymous user the owner.
+     if (!$translation->getOwner()) {
+       $translation->setOwnerId(0);
+     }
+   }
+
+   // If no revision author has been set explicitly, make the book owner the
+   // revision author.
+   if (!$this->getRevisionUser()) {
+     $this->setRevisionUserId($this->getOwnerId());
+   }
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function getName() {
+   return $this->get('name')->value;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function setName($name) {
+   $this->set('name', $name);
+   return $this;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function getImage() {
+   return $this->get('image')->value;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function setImage($name) {
+   $this->set('image', $name);
+   return $this;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function getNotes() {
+   return $this->get('notes')->value;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function setNotes($name) {
+   $this->set('notes', $name);
+   return $this;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function getIsbn() {
+   return $this->get('isbn')->value;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function setIsbn($name) {
+   $this->set('isbn', $name);
+   return $this;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function getPrice() {
+   return $this->get('price')->value;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function setPrice($name) {
+   $this->set('price', $name);
+   return $this;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function getCreatedTime() {
+   return $this->get('created')->value;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function setCreatedTime($timestamp) {
+   $this->set('created', $timestamp);
+   return $this;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function getOwner() {
+   return $this->get('user_id')->entity;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function getOwnerId() {
+   return $this->get('user_id')->target_id;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function setOwnerId($uid) {
+   $this->set('user_id', $uid);
+   return $this;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function setOwner(UserInterface $account) {
+   $this->set('user_id', $account->id());
+   return $this;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function isPublished() {
+   return (bool) $this->getEntityKey('status');
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public function setPublished($published) {
+   $this->set('status', $published ? TRUE : FALSE);
+   return $this;
+ }
+
+ /**
+  * {@inheritdoc}
+  */
+ public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+   $fields = parent::baseFieldDefinitions($entity_type);
+
+   $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
+     ->setLabel(t('Authored by'))
+     ->setDescription(t('The user ID of author of the Book entity.'))
+     ->setRevisionable(TRUE)
+     ->setSetting('target_type', 'user')
+     ->setSetting('handler', 'default')
+     ->setTranslatable(TRUE)
+     ->setDisplayOptions('view', [
+       'label' => 'hidden',
+       'type' => 'author',
+       'weight' => 0,
+     ])
+     ->setDisplayOptions('form', [
+       'type' => 'entity_reference_autocomplete',
+       'weight' => 5,
+       'settings' => [
+         'match_operator' => 'CONTAINS',
+         'size' => '60',
+         'autocomplete_type' => 'tags',
+         'placeholder' => '',
+       ],
+     ])
+     ->setDisplayConfigurable('form', TRUE)
+     ->setDisplayConfigurable('view', TRUE);
+
+   $fields['image'] = BaseFieldDefinition::create('image')
+     ->setLabel(t('Image'))
+     ->setRequired(TRUE)
+     ->setDisplayOptions('view', [
+       'label'   => 'above',
+       'type'    => 'image',
+       'weight'  => 0,
+     ])
+     ->setDisplayOptions('form', [
+       'type'    => 'image_image',
+       'weight'  => 0,
+     ])
+     ->setRequired(FALSE);
+
+   $fields['name'] = BaseFieldDefinition::create('string')
+     ->setLabel(t('Name'))
+     ->setDescription(t('The name of the Book entity.'))
+     ->setRevisionable(TRUE)
+     ->setSettings([
+       'max_length' => 50,
+       'text_processing' => 0,
+     ])
+     ->setDefaultValue('')
+     ->setDisplayOptions('view', [
+       'label' => 'above',
+       'type' => 'string',
+       'weight' => -4,
+     ])
+     ->setDisplayOptions('form', [
+       'type' => 'string_textfield',
+       'weight' => -4,
+     ])
+     ->setDisplayConfigurable('form', TRUE)
+     ->setDisplayConfigurable('view', TRUE)
+     ->setRequired(TRUE);
+
+   $fields['isbn'] = BaseFieldDefinition::create('integer')
+     ->setLabel(t('ISBN'))
+     ->setDescription(t('ISBN of the Book'))
+     ->setRevisionable(TRUE)
+     ->setTranslatable(TRUE)
+     ->setDisplayOptions('form', array(
+       'type' => 'string_textfield',
+       'settings' => array(
+         'display_label' => TRUE,
+       ),
+     ))
+     ->setDisplayOptions('view', array(
+       'label' => 'hidden',
+       'type' => 'string',
+     ))
+     ->setDisplayConfigurable('form', TRUE)
+     ->setRequired(FALSE);
+
+   $fields['price'] = BaseFieldDefinition::create('float')
+     ->setLabel(t('Price'))
+     ->setDescription(t('Price of the Book'))
+     ->setRevisionable(TRUE)
+     ->setTranslatable(TRUE)
+     ->setDisplayOptions('form', array(
+       'type' => 'string_textfield',
+       'settings' => array(
+         'display_label' => TRUE,
+       ),
+     ))
+     ->setDisplayOptions('view', array(
+       'label' => 'hidden',
+       'type' => 'string',
+     ))
+     ->setDisplayConfigurable('form', TRUE)
+     ->setRequired(FALSE);
+
+   $fields['notes'] = BaseFieldDefinition::create('string_long')
+     ->setLabel(t('Notes'))
+     ->setDescription(t('Example of string_long field.'))
+     ->setDefaultValue('')
+     ->setRequired(FALSE)
+     ->setDisplayOptions('view', [
+       'label' => 'visible',
+       'type' => 'basic_string',
+       'weight' => 5,
+     ])
+     ->setDisplayOptions('form', [
+       'type' => 'string_textarea',
+       'weight' => 5,
+       'settings' => ['rows' => 4],
+     ])
+     ->setDisplayConfigurable('view', TRUE)
+     ->setDisplayConfigurable('form', TRUE);
+
+   $fields['status'] = BaseFieldDefinition::create('boolean')
+     ->setLabel(t('Publishing status'))
+     ->setDescription(t('A boolean indicating whether the Book is published.'))
+     ->setRevisionable(TRUE)
+     ->setDefaultValue(TRUE)
+     ->setDisplayOptions('form', [
+       'type' => 'boolean_checkbox',
+       'weight' => -3,
+     ]);
+
+   $fields['created'] = BaseFieldDefinition::create('created')
+     ->setLabel(t('Created'))
+     ->setDescription(t('The time that the entity was created.'));
+
+   $fields['changed'] = BaseFieldDefinition::create('changed')
+     ->setLabel(t('Changed'))
+     ->setDescription(t('The time that the entity was last edited.'));
+
+   return $fields;
+ }
+
+}
+          </pre>
+          <p class="process-text article">At the end of the day you can use my
+            code from bitbucket.</p>
+          <p class="process-text article">To be sure that everything is ok go to
+            <strong>/admin/structure/book</strong> and add some books.</p>
+          <p class="process-text article">Now we are ready for migration.</p>
+          <p class="process-text article">Create new module <strong>entity_migrate</strong>
+          </p>
+
+          <figure>
+            <img src="../images/blog/migrate21.png"
+                 alt="Zoom with default options" class="medium-zoom-image">
+          </figure>
+
+
+          <p class="process-text article">As before, we need migration group <strong>migrate_plus.migration_group.yml </strong></p>
+          <p class="process-text article">File migration <strong>migrate_plus.migration.book_file.yml</strong></p>
+          <p class="process-text article">And node migration <strong>migrate_plus.migration.custom_book </strong></p>
+
+
+          <p class="process-text article"><strong>migrate_plus.migration_group.d7.yml </strong></p>
+
+            <pre>
+id: d7
+label: D7 imports
+description: Migrations importing from the legacy D7 ya_example site
+source_type: Drupal 7
+shared_configuration:
+ source:
+   key: old_drupal
+            </pre>
+
+          <p class="process-text article"><strong>migrate_plus.migration.book_file.yml </strong></p>
+
+<pre>
+# Every migration that references a file by Drupal 7 fid should specify this
+# migration as an optional dependency.
+id: book_file
+label: d7 blog files
+audit: true
+migration_group: d7
+migration_tags:
+ - Drupal 7
+ - Content
+source:
+ plugin: d7_file
+ scheme: public
+ constants:
+   # The tool configuring this migration must set source_base_path. It
+   # represents the fully qualified path relative to which URIs in the files
+   # table are specified, and must end with a /. See source_full_path
+   # configuration in this migration's process pipeline as an example.
+   source_base_path: 'sites/default/files/migrate_files'
+process:
+ # If you are using this file to build a custom migration consider removing
+ # the fid field to allow incremental migrations.
+ fid: fid
+ filename: filename
+ source_full_path:
+   -
+     plugin: concat
+     delimiter: /
+     source:
+       - constants/source_base_path
+       - filepath
+   -
+     plugin: urlencode
+ uri:
+   plugin: file_copy
+   source:
+     - '@source_full_path'
+     - uri
+ filemime: filemime
+ # No need to migrate filesize, it is computed when file entities are saved.
+ # filesize: filesize
+ status: status
+ # Drupal 7 didn't keep track of the file's creation or update time -- all it
+ # had was the vague "timestamp" column. So we'll use it for both.
+ created: timestamp
+ changed: timestamp
+ uid: uid
+destination:
+ plugin: entity:file
+
+</pre>
+
+
+
+
+
+            <p class="process-text article">As before, pay attention on</p>
+          <pre>
+            source_base_path: 'sites/default/files/migrate_files
+          </pre>
+
+
+            <p class="process-text article"><strong>migrate_files</strong> is folder in drupal 8 where we have to copy whole site directory from drupal 7.</p>
+            <p class="process-text article">Folder structure:</p>
+
+          <figure>
+            <img src="../images/blog/migrate22.png"
+                 alt="Zoom with default options" class="medium-zoom-image">
+          </figure>
+
+          <p class="process-text article"><strong>migrate_plus.migration.custom_book.yml</strong></p>
+
+          <pre>
+id: custom_book
+label: Custom book node migration from Drupal 7
+migration_group: d7
+dependencies:
+ enforced:
+   module:
+     - entity_migrate
+source:
+ plugin: d7_node
+ node_type: book
+destination:
+ plugin: entity:book
+process:
+ id: nid
+ vid: vid
+ type: type
+ langcode:
+   plugin: static_map
+   bypass: true
+   source: language
+   map:
+     und: en
+ name: title
+ status: status
+ created: created
+ changed: changed
+ promote: promote
+ sticky: sticky
+ notes: body
+ price: field_price
+ image:
+   plugin: iterator
+   source: field_image
+   process:
+     target_id:
+       plugin: migration_lookup
+       migration: book_file
+       source: fid
+     alt: title
+     title: title
+     height: height
+     width: width
+ isbn: field_isbn
+          </pre>
+          <p class="process-text article">The field mapping is really simple
+            1:1 </p>
+
+          <p class="process-text article"><strong>Custom entity fields:</strong>
+          </p>
+
+          <ul class="article-list">
+            <li><p class="process-text ">name (in drupal 7 it is title)</p></li>
+            <li><p class="process-text ">notes (in drupal 7 it is body field)
+            </p></li>
+            <li><p class="process-text ">image (in drupal 7 it is
+              field_image)</p></li>
+            <li><p class="process-text ">price (in drupal 7 it is
+              field_price)</p></li>
+            <li><p class="process-text ">isbn (in drupal 7 it is field_isbn)</p>
+            </li>
+          </ul>
+
+          <p class="process-text article">Now we are ready for migration</p>
+          <p class="process-text article">Type <strong>drush migrate-status</strong></p>
+
+          <figure>
+            <img src="../images/blog/migrate23.png"
+                 alt="Zoom with default options" class="medium-zoom-image">
+          </figure>
+
+          <p class="process-text article">First thing we are gonna migrate is <strong>book_file</strong>.</p>
+          <p class="process-text article"> Run migration by typing <strong>drush migrate:import book_file</strong>.</p>
+          <p class="process-text article"> After that finish migration with <strong>drush migrate:import custom_book</strong>.</p>
+          <p class="process-text article"> That’s all, have a fun with migration.</p>
+          <p class="process-text article"> You can find source code here:</p>
+
+          <a href="https://bitbucket.org/dzoda/custom-migration/src/master/">Drupal 8 custom content entity migration</a>
+
+
+        </div>
+    </main>
+    <div id="medium" class="medium">
+        <h2>RELATED ARTICLES</h2>
+        <div class="medium-wrapper">
+
+          <a href="../blog/d8-layout-api.html" class="article-link">
+                <div class="article"><div class="teaser-image">
+                    <figure>
+                        <img alt="drupal 8 layout api" src="../images/blog/layout-teaser.png">
+                        <figcaption>Caption for the&nbsp;image</figcaption>
+                    </figure>
+                </div>
+                    <h3>Drupal 8 | Layout api</h3><div class="read-more">New Layout Api in Drupal 8 core is great for handling layouts...</div>
+                </div>
+            </a>
+
+            <a href="../blog/d8-migrate-api-1.html" class="article-link">
+                <div class="article"><div class="teaser-image">
+                    <figure>
+                        <img itemprop="image" src="../images/blog/migration.png"
+                             alt="drupal 8 migrate api 1">
+                        <figcaption>Caption for the&nbsp;image</figcaption>
+                    </figure>
+                </div>
+                    <h3>Drupal 8 | Migration api part 1</h3>
+                    <div class="read-more">Drupal 8 Migrate Api - Vocabulary, taxonomy term, files , nodes...</div>
+                </div>
+            </a>
+
+          <a href="../blog/d8-migrate-api-2.html" class="article-link">
+            <div class="article"><div class="teaser-image">
+              <figure>
+                <img itemprop="image" src="../images/blog/migration.png"
+                     alt="drupal 8 migrate api 2">
+                <figcaption>Caption for the&nbsp;image</figcaption>
+              </figure>
+            </div>
+              <h3>Drupal 8 | Migration api part 2</h3>
+              <div class="read-more">Drupal 8 Migrate Api - Field collection to Paragraphs...</div>
+            </div>
+          </a>
+
+        </div>
+    </div>
+    <footer class="region--footer">
+        <div class="footer__map">
+            <div id="map"></div>
+        </div>
+        <div class="footer--content">
+            <div class="footer__first">
+                <div class="footer__logo">
+                    <img src="../images/logo-white.png" alt="">
+                </div>
+                <dl class="footer__social">
+                    <dt class="footer__social--label">Get in touch</dt>
+                    <dd class="footer__social--links">
+                        <a class="footer__social--link medium-logo" target="_blank" href="https://medium.com/mci-software" title="Medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="31" height="24"><path class="social-logo" fill="#ffffff" d="M3.813 5.049a.97.97 0 0 0-.375-.972L.598.713V.189h8.748l6.729 14.804L22.055.189h8.301v.524L27.963 3.03c-.226.15-.3.449-.3.672v16.973c-.073.224.075.522.3.672l2.317 2.317v.524H18.541v-.524l2.469-2.392c.224-.225.224-.299.224-.673V6.843L14.43 24.04h-.897L5.606 6.843v11.514c-.075.449.075.972.449 1.346l3.14 3.814v.522H.224v-.522l3.141-3.814c.374-.374.523-.822.374-1.346V5.049h.074z"/></svg>
+                        </a>
+                        <a class="footer__social--link linkedin" target="_blank" href="https://www.linkedin.com/company/mci-software/" title="Linkedin">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path  class="social-logo" fill="#ffffff" d="M23.898 15.202V24h-5.1v-8.209c0-2.063-.736-3.47-2.584-3.47-1.41 0-2.248.949-2.617 1.865-.135.327-.17.784-.17 1.244V24H8.326s.069-13.904 0-15.345h5.102v2.175l-.033.049h.033v-.049c.678-1.044 1.889-2.536 4.6-2.536 3.355.001 5.87 2.194 5.87 6.908zM2.989 1.259c-1.746 0-2.888 1.145-2.888 2.65 0 1.472 1.108 2.653 2.819 2.653h.035c1.779 0 2.886-1.18 2.886-2.653-.033-1.505-1.107-2.65-2.852-2.65zM.404 24h5.101V8.655H.404V24z"/></svg>
+                        </a>
+                        <a class="footer__social--link facebook" target="_blank" href="https://www.facebook.com/MCI-software-215688095700760/" title="Facebook">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path class="social-logo" fill="#ffffff" d="M9.235 4.94v3.262H6.844v3.99h2.391V24.05h4.912V12.192h3.295s.309-1.913.457-4.004h-3.734V5.459c0-.407.535-.956 1.066-.956h2.674V.35h-3.639C9.113.349 9.235 4.344 9.235 4.94z"/></svg>
+                        </a>
+                    </dd>
+                </dl>
+            </div>
+            <ul class="footer__nav">
+                <li class="menu-item"><a href="#">What We Do</a></li>
+                <li class="menu-item"><a href="#">Our Skills</a></li>
+                <li class="menu-item"><a href="#">Our Results</a></li>
+                <li class="menu-item"><a href="#">Our Team</a></li>
+                <li class="menu-item"><a href="#">Contact Us</a></li>
+            </ul>
+            <dl class="footer__contact" itemscope itemtype="http://schema.org/LocalBusiness">
+                <dt class="phone label">Telephone:</dt>
+		<dd class="phone val" itemprop="telephone"><a href="tel:+381631128642">+381 63 112 8642</a></dd>
+                <dt class="address label">Address:</dt>
+                <dd class="address val" itemprop="address">Mite Ružića 2, Novi Sad, Serbia</dd>
+                <dt class="e-mail label">e-mail:</dt>
+                <dd class="e-mail val"><a href="mailto:contact@mci.com" itemprop="email">info@mci.rs</a></dd>
+                <dt class="copyright label">Copyright:</dt>
+                <dd class="copyright val">© MCI <span class="year"></span>. All Rights Reserved.</dd>
+            </dl>
+        </div>
+    </footer>
+</div>
+<div class="modal">
+    <div role="dialog" aria-modal="true" class="contact">
+        <h3 class="contact__title">Contact Us</h3>
+        <p class="contact__intro">Got a project? We’d love to hear from you. Send us a message and we’ll respond as soon as possible.</p>
+        <button class="contact__close">Close</button>
+        <form id="contact" class="contact__form" method="post" enctype="application/x-www-form-urlencoded" action="https://formspree.io/info@mci.rs">
+            <label for="username" class="contact__elem">
+                Name
+                <input type="text" id="username" name="username" />
+            </label>
+            <label for="email" class="contact__elem">
+                Email
+                <input type="email" id="email" name="email" aria-required="true" aria-invalid="false" />
+            </label>
+            <label for="message" class="contact__elem">
+                Message
+                <textarea id="message" name="message" cols="40" rows="10" class="contact__text" aria-invalid="false"></textarea>
+            </label>
+            <input type="text" name="_gotcha" title="gotcha" style="display:none" />
+            <div class="contact__elem">
+                <input type="submit" value="Send Message" />
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../scripts/medium-zoom.js"></script>
+</body>
+</html>

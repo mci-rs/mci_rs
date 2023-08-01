@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MCI | Drupal 8 Migrate API Part 1</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../scripts/SmoothScroll.js"></script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHJi08DRS2Jhj03KrqGnkJ0969gMFqw_Y&callback=initMap">
+    </script>
+
+    <script src="../scripts/main.js"></script>
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../images/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../images/favicon/safari-pinned-tab.svg" color="#98336e">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Open Graph -->
+    <meta property="og:image:height" content="312">
+    <meta property="og:image:width" content="596">
+    <meta property="og:title" content=">MCI WEBSITE | Drupal 8 Migrate api pt1">
+    <meta property="og:description" content="Drupal 8 Migration - part 1 - migrating nodes, files and vocabulary">
+    <meta property="og:url" content="http://www.mci.rs/blog/d8-migrate-api-1.html">
+    <meta property="og:image" content="http://www.mci.rs/images/migrationapi1.jpg">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="We provide solutions that are sane and justified from both business and tech perspectives">
+    <meta name="twitter:title" content=">MCI WEBSITE | Drupal 8 Migrate api pt1">
+    <meta name="twitter:description" content="Drupal 8 Migration - part 1 - migrating nodes, files and vocabulary">
+    <!-- Twitter Summary card images must be at least 120x120px -->
+    <meta name="twitter:image" content="http://www.mci.rs/images/migrationapi1.jpg">
+    <!-- Meta description -->
+    <meta name="description" content="Official Mci website, a software developer company, focused on drupal, wordpress, vuejs, react, located in Novi Sad, Sestara Ninković 2a" />
+    <meta itemprop="datePublished" content="2018-11-06T05:40:51+01:00">
+
+</head>
+<body class="blog">
+<div class="page-content">
+    <header id="navigation-region" class="region--header">
+        <div class="header--content">
+            <div class="logo" itemscope itemtype="http://schema.org/LocalBusiness">
+                <a href="../index.html"><img itemprop="logo" src="../images/logo-white.png" alt="MCI logo"></a>
+            </div>
+            <div class="nav">
+                <div class="nav__toggle" id="hamburger-1">
+                    <span class="line"></span>
+                    <span class="line"></span>
+                    <span class="line"></span>
+                </div>
+                <nav class="nav__menu">
+                    <a href="../index.html#what-we-do">What We Do</a>
+                    <a href="../index.html#skills">Our Skills</a>
+                    <a href="../index.html#processes">Our Process</a>
+                    <a href="../index.html#team">Our Team</a>
+                    <div  class="menulink modal--activate">Contact Us</div>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <section class="region--hero blog-d8-migrate-1">
+        <div class="hero">
+            <h1 class="hero__title">Migrate nodes and vocabulary from Drupal 7 to Drupal 8</h1>
+            <div class="hero__text">
+                Development |  <div class="dateposted" itemprop="dateModified" content="2018-11-06T05:40:51+02:00"><time> 6 Nov 18</time></div>
+            </div>
+        </div>
+    </section>
+    <main class="region--content">
+        <div id="processes" class="process-text-section article">
+                <p class="process-text article">In this blog we will explain a migration from drupal 7 to drupal 8. Everything you need to know before starting your first migration and troubles you will have to deal with.</p>
+                <p class="process-text article">First step is to download the needed modules - there are some drupal contrib modules that allow you to do a drupal migration in the most cleanest way, and the process will be up to drupal standards.</p>
+                <ul class="article-list">
+                    <p class="process-text article">These are:</p>
+                    <li><p class="process-text ">Drupal Migrate</p></li>
+                    <li><p class="process-text ">Drupal Migrate UI (optional)</p></li>
+                    <li><p class="process-text ">Migrate</p></li>
+                    <li><p class="process-text ">Migrate Upgrade</p></li>
+                    <li><p class="process-text ">Migrate Tools</p></li>
+                    <li><p class="process-text ">Migrate Plus</p></li>
+                </ul>
+                <p class="process-text article">What is migration and how it works</p>
+                <img src="../images/blog/migrate11.PNG" alt="Zoom with default options" class="medium-zoom-image">
+                <p class="process-text article">This is a common approach to a migration. We have a source database (doesn't necessarily need to be a database, it can be CSV, XML, JSON etc.) and we have a destination database which is a Drupal 8 <strong>database.</strong> As you can see on the diagram between these two databases (source and destination) we have a list of ordered operations.</p>
+            <p class="process-text article">The first one is a <strong>getting the data</strong>, it’s a query system which lets you get the data from the source database. Mapping goes next, where you can set which field from the source database should go (and where) to the destination database. The next step is processing, in this operation, we can change the data taken from the source db. For example, we need to change a format of the taken data to fit new structures in Drupal 8 (It is actually a preprocess for each row that is getting migrated). The last one are settings, it’s a part of the destination object that sets the data in the structures of the destination database (Drupal 8 database structure).</p>
+            <ul class="article-list">
+                <p class="process-text article"><strong>KEY PHRASES:</strong></p>
+                <li><p class="process-text ">Migration: The process of moving content from one site to another. ‘A migration’ typically refers to all the content of a single content or entity type (in other words, one node type, one taxonomy, and so on).</p></li>
+                <li><p class="process-text ">Migration Group: A collection of Migrations with common traits</p></li>
+                <li><p class="process-text ">Source: The Drupal 6 or 7 database from which you’re drawing your content (or other weird source of data, if applicable)</p></li>
+                <li><p class="process-text ">Process: The process which Drupal code does to the data after it’s been loaded, in order to digest it into a format that Drupal 8 can work with.</p></li>
+                <li><p class="process-text ">Destination: The Drupal 8 site</p></li>
+            </ul>
+            <p class="process-text article">Interestingly, each of those key phrases above corresponds directly to a code file that’s required for migration. Each Migration has a configuration (.yml) file, and each is individually tailored for the content of that entity. As config files, each of these is pretty independant and not reusable. However, we can also assign them to Migration Groups. Groups are also configuration (.yml) files. They allow us to declare common configurations once, and reuse them in each migration that belongs to that group.</p>
+            <p class="process-text article">The Source Plugin code is responsible for doing queries to the Source database, retrieving the data, and formatting it into PHP objects that can be worked on. The Process Plugin takes that data, does stuff to it, and passes it to the next step. The Destination Plugin then saves it in Drupal 8 format.  Rinse, repeat.</p>
+            <p class="process-text article">On a Drupal-to-Drupal migration, around 75% of your time will be spent working in the Migration or Migration Group config, declaring the different Process Plugins to use. You may wind up writing one or more Process Plugins as part of your migration development, but a lot of really useful ones are included in Drupal core migration code and are documented <a href="https://www.drupal.org/docs/8/api/migrate-api/migrate-process-plugins/list-of-core-migrate-process-plugins">here.</a></p>
+            <p class="process-text article">A few more are included with Migrate Plus.</p>
+            <p class="process-text article">Drupal 8 core has Source Plugins for all standard Drupal 6 and Drupal 7 entity types (node, taxonomy, user, etc.). The only time you’ll ever need to write a Source plugin is for a migration from a source other than Drupal 6 or 7, and many of these are already available as Contrib modules. Also included in Drupal core are Destination Plugins for all of the core entity types. Unless you’re using a custom entity in Drupal 8, and migrating data into that entity, you’ll probably never write a Destination Plugin.</p>
+            <h2>Let’s start with our first migration</h2>
+            <ul class="article-list">
+                <p class="process-text article">In this example we will migrate Blog content type with fields listed below:</p>
+                <li><p class="process-text ">Title</p></li>
+                <li><p class="process-text ">Body</p></li>
+                <li><p class="process-text ">Field_tags (Term reference)</p></li>
+                <li><p class="process-text ">Field_image (Image field)</p></li>
+            </ul>
+            <p class="process-text article">Tags vocabulary with tag terms.</p>
+            <p class="process-text article">First step</p>
+            <p class="process-text article">Install vanila drupal 7 site, create vocabulary ‘Tags’ fill up with some optional terms  and create an content type ‘Blog’ that contains mentioned fields. After that, create few nodes of blog content type and populate it with some dummy content. When you finish that export database (we will use this database as source).</p>
+            <p class="process-text article">Second step.</p>
+            <p class="process-text article">Install a vanila drupal 8 site, and also create a content type ‘Blog’ that contains mentioned fields. It would be nice if you could export the configuration after creation within a custom module that will be used for a custom migration or into a global config/sync folder.</p>
+            <p class="process-text article"><strong>SNote: During migration process you will often have to delete your configurations from ‘config’ table in drupal 8 database (this configuration is provided by your custom module). For every modification in your .yml config file you have to uninstall and then install module again. </strong></p>
+
+            <p class="process-text article">In this example I’ve worked with a docker local environment. If you prefer working with docker then you can use this setup for drupal 8 migration.</p>
+            <p class="process-text article">Be aware that your will need two <strong> mysql / mariadb containers. </strong> One for drupal 7 database and another one for drupal 8 database.</p>
+
+            <pre>
+            version: "3"
+
+            services:
+             mariadb8:
+               image: wodby/mariadb:$MARIADB_TAG
+               container_name: "${PROJECT_NAME}_mariadb8"
+               stop_grace_period: 30s
+               environment:
+                 MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+                 MYSQL_DATABASE: $DB_NAME
+                 MYSQL_USER: $DB_USER
+                 MYSQL_PASSWORD: $DB_PASSWORD
+               volumes:
+                 - ./databases:/var/lib/mysql/databases
+            #    volumes:
+            #      - ./mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
+            #      - /path/to/mariadb/data/on/host:/var/lib/mysql # Use bind mount
+
+             mariadb7:
+                 image: wodby/mariadb:$MARIADB_TAG
+                 container_name: "${PROJECT_NAME}_mariadb7"
+                 stop_grace_period: 30s
+                 environment:
+                   MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+                   MYSQL_DATABASE: drupal7
+                   MYSQL_USER: drupal7
+                   MYSQL_PASSWORD: drupal7
+                 volumes:
+                   - ./databases:/var/lib/mysql/databases
+             #    volumes:
+             #      - ./mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
+             #      - /path/to/mariadb/data/on/host:/var/lib/mysql # Use bind mount8
+
+             php:
+               image: wodby/drupal-php:$PHP_TAG
+               container_name: "${PROJECT_NAME}_php"
+               environment:
+                 PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog:1025
+                 DB_HOST: $DB_HOST
+                 DB_USER: $DB_USER
+                 DB_PASSWORD: $DB_PASSWORD
+                 DB_NAME: $DB_NAME
+                 DB_DRIVER: $DB_DRIVER
+                 COLUMNS: 80 # Set 80 columns for docker exec -it.
+            ## Read instructions at https://wodby.com/stacks/drupal/docs/local/xdebug/
+                 PHP_XDEBUG: 1
+                 PHP_XDEBUG_DEFAULT_ENABLE: 1
+            #      PHP_XDEBUG_REMOTE_CONNECT_BACK: 0
+            #      PHP_IDE_CONFIG: serverName=my-ide
+            #      PHP_XDEBUG_REMOTE_HOST: host.docker.internal # Docker 18.03+ & Linux/Mac/Win
+            #      PHP_XDEBUG_REMOTE_HOST: 172.17.0.1 # Linux, Docker < 18.03
+            #      PHP_XDEBUG_REMOTE_HOST: 10.254.254.254 # macOS, Docker < 18.03
+            #      PHP_XDEBUG_REMOTE_HOST: 10.0.75.1 # Windows, Docker < 18.03
+               volumes:
+                 - ./:/var/www/html
+            ## For macOS users (https://wodby.com/stacks/drupal/docs/local/docker-for-mac/)
+            #      - ./:/var/www/html:cached # User-guided caching
+            #      - docker-sync:/var/www/html # Docker-sync
+            ## For Xdebug profiler files
+            #      - files:/mnt/files
+
+             nginx:
+               image: wodby/drupal-nginx
+               container_name: "${PROJECT_NAME}_nginx"
+               ports:
+                 - "9999:80"
+               depends_on:
+                 - php
+               environment:
+            #      NGINX_PAGESPEED: "on"
+                 NGINX_STATIC_OPEN_FILE_CACHE: "off"
+                 NGINX_ERROR_LOG_LEVEL: debug
+                 NGINX_BACKEND_HOST: php
+                 NGINX_SERVER_ROOT: /var/www/html
+            #      NGINX_VHOST_PRESET: $NGINX_VHOST_PRESET
+            #      NGINX_DRUPAL_FILE_PROXY_URL: http://example.com
+               volumes:
+                 - ./:/var/www/html
+            # For macOS users (https://wodby.com/stacks/drupal/docs/local/docker-for-mac/)
+            #      - ./:/var/www/html:cached # User-guided caching
+            #      - docker-sync:/var/www/html # Docker-sync
+            #    labels:
+            #      - 'traefik.backend=nginx'
+            #      - 'traefik.port=80'
+            #      - 'traefik.frontend.rule=Host:${PROJECT_BASE_URL}'
+
+             mailhog:
+               image: mailhog/mailhog
+               container_name: "${PROJECT_NAME}_mailhog"
+
+            </pre>
+            <p class="process-text article">As you can see <strong>mariadb8</strong> will create <strong>databases</strong> folder in your site root.
+                You should copy d7 database into <strong>databases</strong> folder, so you can easily import sql dump file.</p>
+            <p class="process-text article">Now when your containers are up you will be able to import drupal 7 database into <strong>mariadb7</strong> container. (in this case it is <strong>mariadb7</strong>) .</p>
+            <p class="process-text article">Your <strong>settings.php</strong> file should looks like this:</p>
+            <pre>
+
+            $databases['default']['default'] = array(
+             'driver' => 'mysql',
+             'database' => 'drupal',
+             'username' => 'drupal',
+             'password' => 'drupal',
+             'host' => 'mariadb8',
+             'prefix' => '',
+             'port' => '3306',
+            );
+
+            $databases['old_drupal']['default'] = array (
+             'database' => 'drupal7',
+             'username' => 'drupal7',
+             'password' => 'drupal7',
+             'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+             'driver' => 'mysql',
+             'host' => 'mariadb7',
+            );
+
+            </pre>
+            <p class="process-text article">Note that key ‘old_drupal’ points on drupal 7 database, also host is <strong>mariadb7</strong> that points to a docker container that contains drupal 7 database.</p>
+            <p class="process-text article">Now is time to create <strong>migrate_custom</strong> module.</p>
+            <p class="process-text article">Structure of module folder :</p>
+            <figure>
+                <img src="../images/blog/migrate12.png" alt="Zoom with default options" class="medium-zoom-image">
+            </figure>
+            <p class="process-text article">Create <strong>migrate_custom.info.yml</strong> file.</p>
+            <pre>
+
+            name: My Migrate
+            description: Performs an example of a simple Drupal-to-Drupal migration.
+            package: Other
+            dependencies:
+            - migrate
+            - migrate_drupal
+            - migrate_plus
+            type: module
+            core: 8.x
+
+            </pre>
+            <p class="process-text article">Now we need to group migration sections. Create <strong>migrate_plus.migration_group.d7.yml</strong> file.</p>
+            <pre>
+
+            id: d7
+            label: D7 imports
+            description: Migrations importing from the legacy D7 ya_example site
+            source_type: Drupal 7
+            shared_configuration:
+             source:
+               key: old_drupal
+
+            </pre>
+            <p class="process-text article">In this file the most important point is the source key, it is the name of source database (from settings.php file).</p>
+            <p class="process-text article">After that, we will create a component for the vocabulary migrate_plus.migration.custom_taxonomy_vocabulary.yml</p>
+            <pre>
+
+            id: custom_taxonomy_vocabulary
+            label: Drupal 7 taxonomy vocabularies
+            migration_group: d7
+            dependencies:
+             enforced:
+               module:
+                 - migrate_custom
+            source:
+             plugin: custom_taxonomy_vocabulary
+            process:
+             vid:
+               -
+                 plugin: machine_name
+                 source: machine_name
+               -
+                 plugin: dedupe_entity
+                 entity_type: taxonomy_vocabulary
+                 field: vid
+                 length: 32
+             label: name
+             name: name
+             description: description
+             hierarchy: hierarchy
+             module: module
+             weight: weight
+            destination:
+             plugin: entity:taxonomy_vocabulary
+
+            </pre>
+            <p class="process-text article">Pay attention on source plugin ‘custom_taxonomy_vocabulary’ , this plugin will be triggered when you start this migration.</p>
+            <p class="process-text article">Let’s create migration plugin for vocabulary. Create <strong>Vocabulary.php</strong> file into <strong>migrate_custom/src/Plugin/migrate/source</strong> folder.</p>
+            <pre>
+
+                /**
+                * @file
+                * Contains \Drupal\migrate_custom\Plugin\migrate\source\Vocabulary.
+                */
+
+                namespace Drupal\migrate_custom\Plugin\migrate\source;
+
+                use Drupal\migrate\Row;
+                use Drupal\migrate\Plugin\migrate\source\SqlBase;
+
+                /**
+                * Drupal 7 vocabularies source from database.
+                *
+                * @MigrateSource(
+                *   id = "custom_taxonomy_vocabulary",
+                *   source_provider = "taxonomy"
+                * )
+                */
+                class Vocabulary extends SqlBase {
+
+                 /**
+                  * {@inheritdoc}
+                  */
+                 public function query() {
+                   $query = $this->select('taxonomy_vocabulary', 'v')
+                     ->fields('v', array(
+                       'vid',
+                       'name',
+                       'description',
+                       'hierarchy',
+                       'module',
+                       'weight',
+                       'machine_name'
+                     ));
+                   return $query;
+                 }
+            </pre>
+            <p class="process-text article">Query method will select all vocabularies from source database. You can modify this by your needs.</p>
+            <p class="process-text article">Then we need two more methods <strong>‘fields()’</strong> and <strong>‘getIds()’</strong>.</p>
+            <pre>
+            /**
+            * {@inheritdoc}
+            */
+            public function fields() {
+             return array(
+               'vid' => $this->t('The vocabulary ID.'),
+               'name' => $this->t('The name of the vocabulary.'),
+               'description' => $this->t('The description of the vocabulary.'),
+               'help' => $this->t('Help text to display for the vocabulary.'),
+               'relations' => $this->t('Whether or not related terms are enabled within the vocabulary. (0 = disabled, 1 = enabled)'),
+               'hierarchy' => $this->t('The type of hierarchy allowed within the vocabulary. (0 = disabled, 1 = single, 2 = multiple)'),
+               'weight' => $this->t('The weight of the vocabulary in relation to other vocabularies.'),
+               'parents' => $this->t("The Drupal term IDs of the term's parents."),
+               'node_types' => $this->t('The names of the node types the vocabulary may be used with.'),
+             );
+            }
+
+            /**
+            * {@inheritdoc}
+            */
+            public function getIds() {
+             $ids['vid']['type'] = 'integer';
+             return $ids;
+            }
+            </pre>
+            <p class="process-text article">As you can see there is just a field definitions.
+                Now we have a taxonomy_vocabulary ready for migration.</p>
+            <p class="process-text article"><strong>Drupal Migration API Source plugin</strong></p>
+            <figure>
+                <img src="../images/blog/migrate13.png" alt="Zoom with default options" class="medium-zoom-image">
+            </figure>
+            <p class="process-text article">Lets create terms migration.
+                Create <strong>migrate_plus.migration.custom_taxonomy_term.yml</strong> file
+            </p>
+            <pre>
+            id: custom_taxonomy_term
+            label: Drupal 7 taxonomy terms
+            migration_group: d7
+            dependencies:
+             enforced:
+               module:
+                 - migrate_custom
+            source:
+             plugin: custom_taxonomy_term
+            process:
+             tid: tid
+             vid:
+               plugin: migration_lookup
+               migration: custom_taxonomy_vocabulary
+               source: vid
+             name: name
+             description: description
+             weight: weight
+             parent:
+               -
+                 plugin: skip_on_empty
+                 method: process
+               -
+                 plugin: migration_lookup
+                 migration: custom_taxonomy_term
+             changed: timestamp
+            destination:
+             plugin: entity:taxonomy_term
+            migration_dependencies:
+             required:
+               - custom_taxonomy_vocabulary
+            </pre>
+            <p>Pay attention on migration_dependencies. If you run terms migration before vocabulary migration it will automatically trigger <strong>‘custom_taxonomy_vocabulary’</strong>. It makes sense right?</p>
+            <p class="process-text article">As we have to write plugin for vocabulary, we also need to make plugin for terms.
+                In <strong>migrate_custom/src/Plugin/migrate/source</strong> folder create <strong>Term.php</strong> file.</p>
+
+            <pre>
+
+            namespace Drupal\migrate_custom\Plugin\migrate\source;
+
+            use Drupal\migrate\Row;
+            use Drupal\migrate\Plugin\migrate\source\SqlBase;
+
+            /**
+             * Drupal 7 taxonomy terms source from database.
+             *
+             * @todo Support term_relation, term_synonym table if possible.
+             *
+             * @MigrateSource(
+             *   id = "custom_taxonomy_term",
+             *   source_provider = "taxonomy"
+             * )
+             */
+            class Term extends SqlBase {
+
+                /**
+             * @file
+             * Contains \Drupal\migrate_custom\Plugin\migrate\source\Term.
+             */
+
+
+
+              /**
+               * {@inheritdoc}
+               */
+              public function query() {
+                $query = $this->select('taxonomy_term_data', 'td')
+                  ->fields('td', array('tid', 'vid', 'name', 'description', 'weight', 'format'))
+                  ->distinct();
+                return $query;
+              }
+
+                  /**
+                   * {@inheritdoc}
+                   */
+                  public function fields() {
+                    return array(
+                      'tid' => $this->t('The term ID.'),
+                      'vid' => $this->t('Existing term VID'),
+                      'name' => $this->t('The name of the term.'),
+                      'description' => $this->t('The term description.'),
+                      'weight' => $this->t('Weight'),
+                      'parent' => $this->t("The Drupal term IDs of the term's parents."),
+                    );
+                  }
+
+                  /**
+                   * {@inheritdoc}
+                   */
+                  public function prepareRow(Row $row) {
+                    // Find parents for this row.
+                    $parents = $this->select('taxonomy_term_hierarchy', 'th')
+                      ->fields('th', array('parent', 'tid'))
+                      ->condition('tid', $row->getSourceProperty('tid'))
+                      ->execute()
+                      ->fetchCol();
+                    $row->setSourceProperty('parent', $parents);
+                    return parent::prepareRow($row);
+                  }
+
+                  /**
+                   * {@inheritdoc}
+                   */
+                  public function getIds() {
+                    $ids['tid']['type'] = 'integer';
+                    return $ids;
+                  }
+
+                }
+
+            </pre>
+            <p class="process-text article">The new method is <strong>‘prepareRow()’</strong> You can look at this as row preprocess. So each row that is about to be migrated you can preprocess.</p>
+            <p class="process-text article">Because we have file field in our Blog node (<strong>field_image</strong>) we need to migrate files before start migrate Blog nodes.</p>
+            <p class="process-text article">Files migration could be real nightmare, but in this example we will show you how to do it simply.</p>
+            <p class="process-text article">First we need migrate_plus.migration.blog_file.yml config file.</p>
+            <pre>
+             # Every migration that references a file by Drupal 7 fid should specify this
+            # migration as an optional dependency.
+            id: blog_file
+            label: d7 blog files
+            audit: true
+            migration_group: d7
+            migration_tags:
+             - Drupal 7
+             - Content
+            source:
+             plugin: d7_file
+             scheme: public
+             constants:
+               # The tool configuring this migration must set source_base_path. It
+               # represents the fully qualified path relative to which URIs in the files
+               # table are specified, and must end with a /. See source_full_path
+               # configuration in this migration's process pipeline as an example.
+               source_base_path: 'sites/default/files/migrate_files'
+            process:
+             # If you are using this file to build a custom migration consider removing
+             # the fid field to allow incremental migrations.
+             fid: fid
+             filename: filename
+             source_full_path:
+               -
+                 plugin: concat
+                 delimiter: /
+                 source:
+                   - constants/source_base_path
+                   - filepath
+               -
+                 plugin: urlencode
+             uri:
+               plugin: file_copy
+               source:
+                 - '@source_full_path'
+                 - uri
+             filemime: filemime
+             # No need to migrate filesize, it is computed when file entities are saved.
+             # filesize: filesize
+             status: status
+             # Drupal 7 didn't keep track of the file's creation or update time -- all it
+             # had was the vague "timestamp" column. So we'll use it for both.
+             created: timestamp
+             changed: timestamp
+             uid: uid
+            destination:
+             plugin: entity:file
+            migration_dependencies:
+             required:
+               - d7_users
+
+            </pre>
+
+            <p class="process-text article">Pay attention on </p><pre>source_base_path: 'sites/default/files/migrate_files'</pre>
+            <p class="process-text article">This is a path where you should copy old drupal 7 files folder.</p>
+
+            <pre>
+            migration_dependencies:
+             required:
+               - d7_users
+            </pre>
+
+            <p class="process-text article">This part of code is not necessary. It means that blog_file migration needs user migration first.</p>
+            <p class="process-text article">Now it’s time to copy whole sites folder from old drupal 7 site to new migrate_files folder. The folder structure should looks like example below :</p>
+            <figure>
+                <img src="../images/blog/migrate14.png" alt="Zoom with default options" class="medium-zoom-image">
+            </figure>
+            <p class="process-text article">Now we can finally migrate our Blog nodes from drupal 7 to drupal 8 site.</p>
+            <p class="process-text article">Create <strong>migrate_plus.migration.custom_blog.yml</strong> config file.</p>
+            <pre>
+
+            id: custom_blog
+            label: Custom article node migration from Drupal 7
+            migration_group: d7
+            dependencies:
+             enforced:
+               module:
+                 - migrate_custom
+            source:
+             plugin: d7_node
+             node_type: blog
+            destination:
+             plugin: entity:node
+             bundle: blog
+            process:
+             nid: nid
+             vid: vid
+             type: type
+             langcode:
+               plugin: static_map
+               bypass: true
+               source: language
+               map:
+                 und: en
+             title: title
+             uid: uid
+             status: status
+             created: created
+             changed: changed
+             promote: promote
+             sticky: sticky
+             body:
+               plugin: iterator
+               source: body
+               process:
+                 value: value
+                 format:
+                   -
+                     plugin: static_map
+                     bypass: true
+                     source: format
+                     map:
+                       - null
+                   -
+                     plugin: skip_on_empty
+                     method: process
+                   -
+                     plugin: migration
+                     migration:
+                       - d6_filter_format
+                       - d7_filter_format
+                     source: format
+             field_tags:
+               plugin: migration_lookup
+               source: field_tags
+               migration: custom_taxonomy_term
+               no_stub: true
+             field_image:
+               plugin: iterator
+               source: field_image
+               process:
+                 target_id:
+                   plugin: migration_lookup
+                   migration: blog_file
+                   source: fid
+                 alt: alt
+                 title: title
+                 height: height
+                 width: width
+            migration_dependencies:
+             required:
+               - d7_user
+               - blog_file
+            </pre>
+            <p class="process-text article">Now we are ready to run migration.</p>
+            <p class="process-text article">I would suggest you to update your <strong>drush</strong> to 9.x version.</p>
+            <p class="process-text article">Enable migrate_custom module. (<strong>drush en migrate_custom</strong>).</p>
+            <p class="process-text article">Next, you will need to install the Migration Group entity type (<strong>drush entup</strong>).</p>
+            <p class="process-text article">Type ‘<strong>drush migrate-status</strong>’ it will list up all available migrations.</p>
+            <p class="process-text article">‘<strong>drush migrate:import migration_id</strong>’ will run migration</p>
+            <p class="process-text article">‘<strong>drush migrate:rollback migration_id</strong>’ will rollback migration data.</p>
+            <p class="process-text article">Now when you type <strong>drush migrate-status</strong> you should see something similar this</p>
+            <figure>
+                <img src="../images/blog/migrate15.png" alt="Zoom with default options" class="medium-zoom-image">
+            </figure>
+            <p class="process-text article">Run migrations by order listed below :</p>
+            <p class="process-text article">- Vocabulary (<strong>drush migrate:import custom_taxonomy_vocabulary</strong>)</p>
+            <p class="process-text article">- Terms (<strong>drush migrate:import custom_taxonomy_term</strong>)</p>
+            <p class="process-text article">- Files (<strong>drush migrate:import blog_file</strong>)</p>
+            <p class="process-text article">- Blog (<strong>drush migrate:import custom_blog</strong>)</p>
+
+
+            <h2>Suggestions and Additional stuff</h2>
+
+            <p class="process-text article">If the execution of the migration fails, it’s state may continue to say "Importing". Running the migration in this state again will give us an error message "Migration xx is busy with another operation". To fix this you can stop and reset the migration with the drush migrate-reset-status [migration_id] command.</p>
+
+            <p class="process-text article"><strong>Debugging process</strong></p>
+            <p class="process-text article">Migrate debugging may be very difficult, you can’t debug yml files, but you are able to debug plugin processes. There are a few debug methods that may help you in this case.</p>
+
+            <p class="process-text article"><strong>View messages of a migration execution</strong></p>
+            <p class="process-text article">When migrations are executed with Drush using contributed Migrate Tools module, the messages of a migration can be used with drush migrate-messages &lt;migration&gt; or alias drush mmsg &lt;migration&gt;.</p>
+
+            <p class="process-text article"><strong>Printing debug information when using Drush</strong></p>
+            <p class="process-text article">If you execute migrations using Drush, you can print debug information using drush_print(). This can be included for example in the prepareRow() method of the source plugin.</p>
+
+            <p class="process-text article"><strong>xDebug method</strong></p>
+            <p class="process-text article">If you prefer xDebug tool you can debug source plugin if you follow these instructions below.</p>
+            <p class="process-text article">In migrate_custom.module file create hook_preprocess_page() or some other hook. Be sure that this ‘other’ hook will be triggered in browser. Call migrate service in this hook, like in the example.</p>
+            <pre>
+
+            function migrate_custom_preprocess_node(&$variables) {
+             $migration_id = 'custom_blog'; //put breakpoint here
+             $migration = \Drupal::service('plugin.manager.migration')
+               ->createInstance($migration_id);
+             $executable = new MigrateExecutable($migration, new MigrateMessage());
+             $a = $executable->import();
+            }
+
+            </pre>
+
+            <p class="process-text article">Also you can automate your migration if you call migrate service in migrate_custom.install file.</p>
+
+            <pre>
+
+            use Drupal\migrate\MigrateExecutable;
+            use Drupal\migrate\MigrateMessage;
+
+
+            /**
+            * Migrate import for tags vocabulary.
+            */
+            function migrate_custom_update_8104() {
+             $migration_id = 'custom_taxonomy_vocabulary';
+             $migration = \Drupal::service('plugin.manager.migration')
+               ->createInstance($migration_id);
+             $executable = new MigrateExecutable($migration, new MigrateMessage());
+             $executable->import();
+            }
+
+            /**
+            * Migrate import for tags terms.
+            */
+            function migrate_custom_update_8105() {
+             $migration_id = 'custom_taxonomy_term';
+             $migration = \Drupal::service('plugin.manager.migration')
+               ->createInstance($migration_id);
+             $executable = new MigrateExecutable($migration, new MigrateMessage());
+             $executable->import();
+            }
+
+            /**
+            * Migrate import for node blog.
+            */
+            function migrate_custom_update_8107() {
+             $migration_id = 'custom_blog';
+             $migration = \Drupal::service('plugin.manager.migration')
+               ->createInstance($migration_id);
+             $executable = new MigrateExecutable($migration, new MigrateMessage());
+             $executable->import();
+            }
+
+            </pre>
+
+            <p class="process-text article">That’s it! We’ve suscessfully ran the import, you can download the module <a href="https://bitbucket.org/dzoda/custom-migration/src/master/">here:</a> </p>
+            <p class="process-text article">Next, in <a href="d8-migrate-api-2.html">part 2</a>, we’ll be going over paragraph migration.</p>
+
+        </div>
+    </main>
+    <div id="medium" class="medium">
+        <h2>RELATED ARTICLES</h2>
+        <div class="medium-wrapper">
+
+
+            <a href="../blog/d8-migrate-api-2.html" class="article-link">
+                <div class="article"><div class="teaser-image">
+                    <figure>
+                        <img itemprop="image" src="../images/blog/migration.png"
+                             alt="drupal 8 migrate api 2">
+                        <figcaption>Caption for the&nbsp;image</figcaption>
+                    </figure>
+                </div>
+                    <h3>Drupal 8 | Migration api part 2</h3>
+                    <div class="read-more">Drupal 8 Migrate Api - Field collection to Paragraphs...</div>
+                </div>
+            </a>
+
+            <a href="../blog/d8-migrate-api-3.html" class="article-link">
+                <div class="article"><div class="teaser-image">
+                    <figure>
+                        <img itemprop="image" src="../images/blog/migration.png"
+                             alt="drupal 8 migrate api 3">
+                        <figcaption>Caption for the&nbsp;image</figcaption>
+                    </figure>
+                </div>
+                    <h3>Drupal 8 | Migration api part 3</h3>
+                    <div class="read-more">Drupal 8 Migrate Api - Migrating users...</div>
+                </div>
+            </a>
+
+          <a href="../blog/d8-migrate-api-4.html" class="article-link">
+            <div class="article"><div class="teaser-image">
+              <figure>
+                <img itemprop="image" src="../images/blog/migration.png"
+                     alt="drupal 8 migrate api 3">
+                <figcaption>Caption for the&nbsp;image</figcaption>
+              </figure>
+            </div>
+              <h3>Drupal 8 | Migration api part 4</h3>
+              <div class="read-more">Drupal 8 Migrate Api - Migrating custom entity...</div>
+            </div>
+          </a>
+
+
+
+        </div>
+    </div>
+    <footer class="region--footer">
+        <div class="footer__map">
+            <div id="map"></div>
+        </div>
+        <div class="footer--content">
+            <div class="footer__first">
+                <div class="footer__logo">
+                    <img src="../images/logo-white.png" alt="">
+                </div>
+                <dl class="footer__social">
+                    <dt class="footer__social--label">Get in touch</dt>
+                    <dd class="footer__social--links">
+                        <a class="footer__social--link medium-logo" target="_blank" href="https://medium.com/mci-software" title="Medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="31" height="24"><path class="social-logo" fill="#ffffff" d="M3.813 5.049a.97.97 0 0 0-.375-.972L.598.713V.189h8.748l6.729 14.804L22.055.189h8.301v.524L27.963 3.03c-.226.15-.3.449-.3.672v16.973c-.073.224.075.522.3.672l2.317 2.317v.524H18.541v-.524l2.469-2.392c.224-.225.224-.299.224-.673V6.843L14.43 24.04h-.897L5.606 6.843v11.514c-.075.449.075.972.449 1.346l3.14 3.814v.522H.224v-.522l3.141-3.814c.374-.374.523-.822.374-1.346V5.049h.074z"/></svg>
+                        </a>
+                        <a class="footer__social--link linkedin" target="_blank" href="https://www.linkedin.com/company/mci-software/" title="Linkedin">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path  class="social-logo" fill="#ffffff" d="M23.898 15.202V24h-5.1v-8.209c0-2.063-.736-3.47-2.584-3.47-1.41 0-2.248.949-2.617 1.865-.135.327-.17.784-.17 1.244V24H8.326s.069-13.904 0-15.345h5.102v2.175l-.033.049h.033v-.049c.678-1.044 1.889-2.536 4.6-2.536 3.355.001 5.87 2.194 5.87 6.908zM2.989 1.259c-1.746 0-2.888 1.145-2.888 2.65 0 1.472 1.108 2.653 2.819 2.653h.035c1.779 0 2.886-1.18 2.886-2.653-.033-1.505-1.107-2.65-2.852-2.65zM.404 24h5.101V8.655H.404V24z"/></svg>
+                        </a>
+                        <a class="footer__social--link facebook" target="_blank" href="https://www.facebook.com/MCI-software-215688095700760/" title="Facebook">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path class="social-logo" fill="#ffffff" d="M9.235 4.94v3.262H6.844v3.99h2.391V24.05h4.912V12.192h3.295s.309-1.913.457-4.004h-3.734V5.459c0-.407.535-.956 1.066-.956h2.674V.35h-3.639C9.113.349 9.235 4.344 9.235 4.94z"/></svg>
+                        </a>
+                    </dd>
+                </dl>
+            </div>
+            <ul class="footer__nav">
+                <li class="menu-item"><a href="#">What We Do</a></li>
+                <li class="menu-item"><a href="#">Our Skills</a></li>
+                <li class="menu-item"><a href="#">Our Results</a></li>
+                <li class="menu-item"><a href="#">Our Team</a></li>
+                <li class="menu-item"><a href="#">Contact Us</a></li>
+            </ul>
+            <dl class="footer__contact" itemscope itemtype="http://schema.org/LocalBusiness">
+                <dt class="phone label">Telephone:</dt>  
+		<dd class="phone val" itemprop="telephone"><a href="tel:+381631128642">+381 63 112 8642</a></dd>
+                <dt class="address label">Address:</dt>
+                <dd class="address val" itemprop="address">Sestara Ninković 2a, Novi Sad, Serbia</dd>
+                <dt class="e-mail label">e-mail:</dt>
+                <dd class="e-mail val"><a href="mailto:contact@mci.com" itemprop="email">info@mci.rs</a></dd>
+                <dt class="copyright label">Copyright:</dt>
+                <dd class="copyright val">© MCI <span class="year"></span>. All Rights Reserved.</dd>
+            </dl>
+        </div>
+    </footer>
+</div>
+<div class="modal">
+    <div role="dialog" aria-modal="true" class="contact">
+        <h3 class="contact__title">Contact Us</h3>
+        <p class="contact__intro">Got a project? We’d love to hear from you. Send us a message and we’ll respond as soon as possible.</p>
+        <button class="contact__close">Close</button>
+        <form id="contact" class="contact__form" method="post" enctype="application/x-www-form-urlencoded" action="https://formspree.io/info@mci.rs">
+            <label for="username" class="contact__elem">
+                Name
+                <input type="text" id="username" name="username" />
+            </label>
+            <label for="email" class="contact__elem">
+                Email
+                <input type="email" id="email" name="email" aria-required="true" aria-invalid="false" />
+            </label>
+            <label for="message" class="contact__elem">
+                Message
+                <textarea id="message" name="message" cols="40" rows="10" class="contact__text" aria-invalid="false"></textarea>
+            </label>
+            <input type="text" name="_gotcha" title="gotcha" style="display:none" />
+            <div class="contact__elem">
+                <input type="submit" value="Send Message" />
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../scripts/medium-zoom.js"></script>
+</body>
+</html>

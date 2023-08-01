@@ -1,0 +1,25 @@
+@mixin shiny($color: rgba(255,255,255,0.25), $width: 5px, $blur:15px) {
+  position: relative;
+  overflow-x: hidden;
+
+  &::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: #{$width};
+    height: 100%;
+    filter: blur(#{$blur});
+    background-color: #{$color};
+    animation: shining 3.5s infinite;
+    animation-delay: 0s;
+  }
+
+  &:focus,
+  &:hover {
+    &::before {
+      animation-play-state: paused;
+    }
+  }
+}

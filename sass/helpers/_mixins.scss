@@ -1,0 +1,21 @@
+// Mixins
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin constrain {
+  width: 100%;
+  max-width: 1200px;
+}
+
+@mixin padded-content {
+  padding: 0 15px;
+
+  @media all and (min-width: $xl + 30px) {
+    padding: 0;
+  }
+}

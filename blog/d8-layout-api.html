@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MCI | Drupal 8 Layout api</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="../scripts/SmoothScroll.js"></script>
+  <script async defer
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHJi08DRS2Jhj03KrqGnkJ0969gMFqw_Y&callback=initMap">
+  </script>
+  <script src="../scripts/main.js"></script>
+
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon/favicon-16x16.png">
+  <link rel="manifest" href="../images/favicon/site.webmanifest">
+  <link rel="mask-icon" href="../images/favicon/safari-pinned-tab.svg" color="#98336e">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Open Graph -->
+  <meta property="og:image:height" content="312">
+  <meta property="og:image:width" content="596">
+  <meta property="og:title" content="MCI WEBSITE | Drupal 8 Layout api">
+  <meta property="og:description" content="Drupal 8 Layout - step by step tutorial">
+  <meta property="og:url" content="http://www.mci.rs/blog/d8-layout-api.html">
+  <meta property="og:image" content="https://cdn-images-1.medium.com/max/1024/1*4T4y8zMKShv-50v_4OszAA.jpeg">
+
+  <!-- Twitter Card data -->
+  <meta name="twitter:card" content="We provide solutions that are sane and justified from both business and tech perspectives">
+  <meta name="twitter:title" content="MCI WEBSITE | Drupal 8 Layout api">
+  <meta name="twitter:description" content="Drupal 8 Layout - step by step tutorial">
+  <!-- Twitter Summary card images must be at least 120x120px -->
+  <meta name="twitter:image" content="https://cdn-images-1.medium.com/max/1024/1*4T4y8zMKShv-50v_4OszAA.jpeg">
+  <!-- Meta description -->
+  <meta name="description" content="Official Mci website, a software developer company, focused on drupal, wordpress, vuejs, react, located in Novi Sad, Sestara Ninković 2a" />
+  <meta itemprop="datePublished" content="2018-11-03T05:40:51+01:00">
+
+
+</head>
+<body class="blog">
+<h1 style="display: none">MCI WEBSITE | Drupal 8 Layout api</h1>
+<div class="page-content">
+  <header id="navigation-region" class="region--header">
+    <div class="header--content">
+      <div class="logo" itemscope itemtype="http://schema.org/LocalBusiness">
+        <a href="../index.html"><img itemprop="logo" src="../images/logo-white.png" alt="MCI logo"></a>
+      </div>
+      <div class="nav">
+        <div class="nav__toggle" id="hamburger-1">
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </div>
+        <nav class="nav__menu">
+          <a href="../index.html#what-we-do">What We Do</a>
+          <a href="../index.html#skills">Our Skills</a>
+          <a href="../index.html#processes">Our Process</a>
+          <a href="../index.html#team">Our Team</a>
+          <div  class="menulink modal--activate">Contact Us</div>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <section class="region--hero blog-d8-layout">
+    <div class="hero">
+      <h2 class="hero__title"> Create awesome layouts with Drupal 8 Layout API</h2>
+      <div class="hero__text">
+        Development | <div class="dateposted" itemprop="dateModified" content="2018-11-03T05:40:51+02:00"><time> 3 Nov 18</time></div>
+      </div>
+    </div>
+  </section>
+  <main class="region--content">
+    <div id="processes" class="process-text-section article">
+      <p class="process-text article">Since I've been working with Drupal, Panels and Display Suite have been successfully managing the layout of the website. Drupal 8.5 brought something new to the table - Layout API has been introduced with it.</p>
+      <p class="process-text article">The layout builder lets users change the way their content is presented. There was some projects in Drupal 7 which were similar to layout builder, but it was never as effective, or as user friendly like the Layout API. The layout, when set up, can affect a content type globally, or user can change layout per node.</p>
+      <p class="process-text article">There are several places in Drupal where elements can be arranged to control their placement.</p>
+      <p class="process-text article">Themes have regions, which contain blocks. Content forms have form elements. Content has fields.</p>
+      <p class="process-text article">The layout builder <strong>can be used in two ways.</strong> You can use it to create a layout for <strong>each content type</strong> on your site and you can also use it to create a layout for each <strong>individual piece of content.</strong></p>
+      <p class="process-text article">This second use case makes the layout builder a landing-page-building tool that content editors and marketers can use to create flexible pages within a Drupal site.</p>
+      <p class="process-text article">It's similar to panels.</p>
+      <p class="process-text article"><strong>Using Layout API:</strong></p>
+      <ul class="article-list">
+        <p class="process-text article">First, you have to install the following modules:</p>
+        <li><p class="process-text ">Layout discovery — core</p></li>
+        <li><p class="process-text ">Layout builder — experimental</p></li>
+        <li><p class="process-text ">Field layout — experimental module — has error with uninstalling — targeting Panelizer module, that is, targets in replacing its complete functionality.</p></li>
+      </ul>
+      <p class="process-text article">You can use these in different ways.</p>
+      <p class="process-text article">If you go to any content type after enabling the module, and if you go on to manage display, you will see a “manage layout” button. Here, you can manage layout, and besides that, if you check “allow each content item to have its layout customized”, you can then set different layouts on individual nodes of the same content type.</p>
+      <p class="process-text article"><strong>Example:</strong></p>
+      <p class="process-text article">Create a blog content type, add a field for image, add a text field description, and add body(it should already be there).</p>
+      <p class="process-text article">Create some content, blog 1 and blog 2 would be enough.</p>
+      <p class="process-text article">Go to the content type in /admin/structure/types/manage/blog/display and click on manage layout:</p>
+      <figure>
+      <img src="../images/blog/layout1.png" alt="Zoom with default options" class="medium-zoom-image">
+      </figure>
+      <p class="process-text article">This will take you to the layout page:</p>
+      <p class="process-text article">Sections: Each section can contain content arranged in a certain layout. Example: 2 columns, 3 columns, etc.</p>
+      <img src="../images/blog/layout2.png" class="article-image" >
+      <p class="process-text article">Other layouts (without images) are the custom ones. When you make them, you can add images for better interpretation.</p>
+      <p class="process-text article">When you choose a type of layout, it will be displayed like this:</p>
+      <img src="../images/blog/layout3.png" class="article-image">
+      <p class="process-text article">Inside each section, you can display:</p>
+      <p class="process-text article">Fields from the content being displayed. Example: title, body, image, etc. Blocks which appear on the Structure > Block Layout page. Example: Page title, tabs, blocks from the custom block library, etc. For this example we will use the default layouts provided by the module.</p>
+      <p class="process-text article"><strong>Do the following:</strong></p>
+      <ol class="article-list">
+        <li><p class="process-text ">1. Choose a two column layout.</p></li>
+        <li><p class="process-text ">2. Set the image in the left column, description in the right column, and leave the body in the bottom block.</p></li>
+      </ol>
+      <img src="../images/blog/layout4.png" class="article-image">
+      <p class="process-text article">That will be the default layout for this content type. Then, if you go to an individual content item, you can see the layout button, where you can customize layout for this particular node.</p>
+      <p class="process-text article">At the moment, individual different layouts are supported only in default view mode.</p>
+      <p class="process-text article">We can also change teaser mode layout, and use that content in a view, it will be displayed as we arranged it, but individual nodes in that view can not have individual layouts.</p>
+      <p class="process-text article">There is a plan for Layout Builder UI, it will be in the 8.6.0-dev.</p>
+      <p class="process-text article"><strong>Custom layouts:</strong></p>
+      <p class="process-text article">Create a .layouts.yml file in your theme or module. Let’s assume we are making a module called my_layouts for providing more layouts. The file will include the name of the module. In this case, it’d be my_layouts.layouts.yml. This would go on the same directory level as your .module and .info.yml files. Add information for your layout. It’s mandatory to add a machine name, label, category, template reference, and regions in this format.</p>
+      <p class="process-text article"><strong>Example:</strong></p>
+      <p class="process-text article">In the template file, you can add regions that you create in the .layouts.yml file in the form of twig variables.</p>
+      <pre><strong>advanced_layout_2:<br>  label: </strong>Advanced Layout 2<br>  <strong>category: </strong>My Layouts<br>  <strong>template: </strong>templates/advanced-layout-2<br>  <strong>library: </strong>mci_layout/advanced-layout-library<br>  <strong>regions:<br>     main:<br>       label: </strong>Main content<br>     <strong>sidebar:<br>       label: </strong>Sidebar</pre>
+      <p class="process-text article">Create a templates directory, where you will have templates for your layout. In my case it’s: <strong>advanced-layout-2.html.twig</strong></p>
+      <p class="process-text article">In the template file, you can add regions that you create in the .layouts.yml file in the form of twig variables.</p>
+      <p class="process-text article"><strong>Example:</strong></p>
+      <pre>&lt;div class="two-column"&gt;<br>    &lt;div class="main-region"&gt;<br>        {{ content.main }}<br>    &lt;/div&gt;<br>    &lt;div class="sidebar-region"&gt;<br>        {{ content.sidebar }}<br>    &lt;/div&gt;<br>&lt;/div&gt;</pre>
+      <p class="process-text article">If you want to implement custom css or some library, you can make a file named <strong>my_layout.libraries.yml</strong> which contained this in my example:</p>
+      <pre><strong>advanced-layout-library:<br>  version: </strong>1.x<br>  <strong>css:<br>    theme:<br>      css/advanced-layout-library.css: </strong>{}<br>  <strong>js:<br>    js/advanced-layout-library.js: </strong>{}<br>  <strong>dependencies:<br>    </strong>- core/jquery</pre>
+      <p class="process-text article">After that, you create a css and js directory, and in it you can add your css and js files, but the names of those files need to reflect the ones in libraries.yml. For more info on <strong>custom layouts</strong> and <strong>registering layouts</strong> you can look at the api documentation:</p>
+      <a href="https://www.drupal.org/docs/8/api/layout-api/how-to-register-layouts"><p class="process-text article">Layout API documentation on Drupal.org</p></a>
+      <p class="process-text article">Using this module, we can arrange layout of blocks, fields, and content. The people from the <strong>Cohesion</strong> company are making an on screen css editor, which would be a great feature for site builders. Bootstrap layouts&#8202;—&#8202;We can use this module to provide layouts.</p>
+      <img src="../images/blog/layout5.png" class="article-image">
+      <p class="process-text article">You can create really cool layouts, go on and try!</p>
+    </div>
+  </main>
+  <div id="medium" class="medium">
+    <h2>RELATED ARTICLES</h2>
+    <div class="medium-wrapper">
+
+      <a href="../blog/d8-migrate-api-1.html" class="article-link">
+        <div class="article"><div class="teaser-image">
+          <figure>
+            <img itemprop="image" src="../images/blog/migration.png"
+                 alt="drupal 8 migrate api 1">
+            <figcaption>Caption for the&nbsp;image</figcaption>
+          </figure>
+        </div>
+          <h3>Drupal 8 | Migration api part 1</h3>
+          <div class="read-more">Drupal 8 Migrate Api - Vocabulary, taxonomy term, files , nodes...</div>
+        </div>
+      </a>
+
+
+      <a href="../blog/d8-migrate-api-2.html" class="article-link">
+        <div class="article"><div class="teaser-image">
+          <figure>
+            <img itemprop="image" src="../images/blog/migration.png"
+                 alt="drupal 8 migrate api 2">
+            <figcaption>Caption for the&nbsp;image</figcaption>
+          </figure>
+        </div>
+          <h3>Drupal 8 | Migration api part 2</h3>
+          <div class="read-more">Drupal 8 Migrate Api - Field collection to Paragraphs...</div>
+        </div>
+      </a>
+
+      <a href="../blog/d8-migrate-api-3.html" class="article-link">
+        <div class="article"><div class="teaser-image">
+          <figure>
+            <img itemprop="image" src="../images/blog/migration.png"
+                 alt="drupal 8 migrate api 3">
+            <figcaption>Caption for the&nbsp;image</figcaption>
+          </figure>
+        </div>
+          <h3>Drupal 8 | Migration api part 3</h3>
+          <div class="read-more">Drupal 8 Migrate Api - Migrating users...</div>
+        </div>
+      </a>
+
+
+
+
+    </div>
+  </div>
+  <footer class="region--footer">
+    <div class="footer__map">
+      <div id="map"></div>
+    </div>
+    <div class="footer--content">
+      <div class="footer__first">
+        <div class="footer__logo">
+          <img src="../images/logo-white.png" alt="">
+        </div>
+        <dl class="footer__social">
+          <dt class="footer__social--label">Get in touch</dt>
+          <dd class="footer__social--links">
+            <a class="footer__social--link medium-logo" target="_blank" href="https://medium.com/mci-software" title="Medium">
+              <svg xmlns="http://www.w3.org/2000/svg" width="31" height="24"><path class="social-logo" fill="#ffffff" d="M3.813 5.049a.97.97 0 0 0-.375-.972L.598.713V.189h8.748l6.729 14.804L22.055.189h8.301v.524L27.963 3.03c-.226.15-.3.449-.3.672v16.973c-.073.224.075.522.3.672l2.317 2.317v.524H18.541v-.524l2.469-2.392c.224-.225.224-.299.224-.673V6.843L14.43 24.04h-.897L5.606 6.843v11.514c-.075.449.075.972.449 1.346l3.14 3.814v.522H.224v-.522l3.141-3.814c.374-.374.523-.822.374-1.346V5.049h.074z"/></svg>
+            </a>
+            <a class="footer__social--link linkedin" target="_blank" href="https://www.linkedin.com/company/mci-software/" title="Linkedin">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path  class="social-logo" fill="#ffffff" d="M23.898 15.202V24h-5.1v-8.209c0-2.063-.736-3.47-2.584-3.47-1.41 0-2.248.949-2.617 1.865-.135.327-.17.784-.17 1.244V24H8.326s.069-13.904 0-15.345h5.102v2.175l-.033.049h.033v-.049c.678-1.044 1.889-2.536 4.6-2.536 3.355.001 5.87 2.194 5.87 6.908zM2.989 1.259c-1.746 0-2.888 1.145-2.888 2.65 0 1.472 1.108 2.653 2.819 2.653h.035c1.779 0 2.886-1.18 2.886-2.653-.033-1.505-1.107-2.65-2.852-2.65zM.404 24h5.101V8.655H.404V24z"/></svg>
+            </a>
+            <a class="footer__social--link facebook" target="_blank" href="https://www.facebook.com/MCI-software-215688095700760/" title="Facebook">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path class="social-logo" fill="#ffffff" d="M9.235 4.94v3.262H6.844v3.99h2.391V24.05h4.912V12.192h3.295s.309-1.913.457-4.004h-3.734V5.459c0-.407.535-.956 1.066-.956h2.674V.35h-3.639C9.113.349 9.235 4.344 9.235 4.94z"/></svg>
+            </a>
+          </dd>
+        </dl>
+      </div>
+      <ul class="footer__nav">
+        <li class="menu-item"><a href="#">What We Do</a></li>
+        <li class="menu-item"><a href="#">Our Skills</a></li>
+        <li class="menu-item"><a href="#">Our Results</a></li>
+        <li class="menu-item"><a href="#">Our Team</a></li>
+        <li class="menu-item"><a href="#">Contact Us</a></li>
+      </ul>
+      <dl class="footer__contact" itemscope itemtype="http://schema.org/LocalBusiness">
+        <dt class="phone label">Telephone:</dt>
+	<dd class="phone val" itemprop="telephone"><a href="tel:+381631128642">+381 63 112 8642</a></dd>
+        <dt class="address label">Address:</dt>
+        <dd class="address val" itemprop="address">Sestara Ninković 2a, Novi Sad, Serbia</dd>
+        <dt class="e-mail label">e-mail:</dt>
+        <dd class="e-mail val"><a href="mailto:contact@mci.com" itemprop="email">info@mci.rs</a></dd>
+        <dt class="copyright label">Copyright:</dt>
+        <dd class="copyright val">© MCI <span class="year"></span>. All Rights Reserved.</dd>
+      </dl>
+    </div>
+  </footer>
+</div>
+<div class="modal">
+  <div role="dialog" aria-modal="true" class="contact">
+    <h3 class="contact__title">Contact Us</h3>
+    <p class="contact__intro">Got a project? We’d love to hear from you. Send us a message and we’ll respond as soon as possible.</p>
+    <button class="contact__close">Close</button>
+    <form id="contact" class="contact__form" method="post" enctype="application/x-www-form-urlencoded" action="https://formspree.io/info@mci.rs">
+      <label for="username" class="contact__elem">
+        Name
+        <input type="text" id="username" name="username" />
+      </label>
+      <label for="email" class="contact__elem">
+        Email
+        <input type="email" id="email" name="email" aria-required="true" aria-invalid="false" />
+      </label>
+      <label for="message" class="contact__elem">
+        Message
+        <textarea id="message" name="message" cols="40" rows="10" class="contact__text" aria-invalid="false"></textarea>
+      </label>
+      <input type="text" name="_gotcha" title="gotcha" style="display:none" />
+      <div class="contact__elem">
+        <input type="submit" value="Send Message" />
+      </div>
+    </form>
+  </div>
+</div>
+<script src="../scripts/medium-zoom.js"></script>
+<script src="../scripts/main.js"></script>
+</body>
+</html>

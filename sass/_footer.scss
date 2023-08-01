@@ -1,0 +1,235 @@
+footer.region--footer {
+  position: relative;
+  font-weight: 200;
+  color: white;
+  //background-image: $black-gradient;
+  background-color: $footer-dark;
+}
+
+.footer {
+  // Google map.
+  &__map {
+    width: 100%;
+    height: 300px;
+    background-color: $semi-black;
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: inherit;
+      pointer-events: none;
+      box-shadow: inset 0 10px 50px -10px rgba(255,255,255,0.5);
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 1px;
+      background-color: #555;
+    }
+  }
+
+  // Content wrapper, wraps: Logo,
+  &--content {
+    @include clearfix;
+    @include constrain;
+    padding: 20px 30px;
+
+    @media all and (min-width: $ls) {
+      @include padded-content;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin: 20px auto;
+
+      // Removes %clearfix;
+      &::after {
+        content: none;
+      }
+    }
+
+    @media all and (min-width: $md) {
+      align-items: center;
+    }
+
+    @media all and (min-width: $xl) {
+      margin: 50px auto 40px;
+    }
+  }
+
+  // Logo & Social links wrapper.
+  &__first {
+    width: 150px;
+    margin: 0 auto 20px;
+
+    @media all and (min-width: $xs) {
+      float: left;
+    }
+
+    @media all and (min-width: $ls) {
+      flex: 0 0 auto;
+      align-self: flex-start;
+    }
+
+    @media all and (min-width: $sm) {
+      margin-bottom: 0;
+    }
+  } // Company logo.
+    &__logo {
+      margin-bottom: 20px;
+      img {
+        max-width: 120px;
+        height: auto;
+        margin: auto;
+      }
+    }
+    // Social links.
+    &__social {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+
+      &--label {
+        display: none;
+        margin-top: 20px;
+      }
+      &--link {
+        position: relative;
+        display: inline-table;
+        width: 32px;
+        height: 32px;
+        border: 0;
+        text-align: center;
+        text-decoration: none;
+        overflow: hidden;
+        color: $transparent;
+
+        &:not(:last-child) {
+          margin-right: 5px;
+        }
+
+        .social-logo {
+          transition: fill .32s ease-in-out;
+        }
+
+        &.facebook {
+          &:hover {
+            .social-logo {
+              fill: #4267b2;
+            }
+          }
+        }
+
+        &.linkedin {
+          &:hover {
+            .social-logo {
+              fill: #0077b7;
+            }
+          }
+        }
+
+        &.medium-logo {
+          width: 41px;
+
+          &:hover {
+            .social-logo {
+              fill: #5bbc63;
+            }
+          }
+        }
+      }
+    }
+  // END of .footer__first
+
+  // Footer navigation menu.
+  &__nav {
+    @include padded-content;
+    display: table;
+    margin: 0 auto 20px;
+
+    @media all and (min-width: $xs) {
+      float: right;
+      display: inline-block;
+    }
+
+    @media all and (min-width: $sm) {
+      margin-bottom: 0;
+    }
+
+    > li {
+      display: block;
+
+      > a {
+        text-decoration: none;
+        color: white;
+        line-height: 1.6;
+        font: {
+          weight: 200;
+          size: 16px;
+        };
+
+        &:hover {
+          color: $purple-light;
+        }
+      }
+    }
+  }
+
+  // Contact credentials.
+  &__contact {
+    @include clearfix;
+    clear: both;
+    margin: 0 auto;
+
+    @media all and (min-width: $ls) {
+      @include padded-content;
+    }
+
+    .label,
+    .val {
+      float: left;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .label {
+      clear: left;
+      font-weight: 400;
+    }
+
+    .val {
+      padding-left: 10px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+
+      &:focus,
+      &:hover {
+        color: $purple-light;
+      }
+    }
+
+    .copyright {
+      clear: both;
+      padding: 15px 0 5px;
+      text-align: left;
+      font: {
+        weight: 600;
+        size: 12px;
+      };
+
+      &.label {
+        display: none;
+      }
+    }
+  }
+}

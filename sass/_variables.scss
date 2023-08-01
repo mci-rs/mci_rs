@@ -1,0 +1,27 @@
+//Colors
+$semi-black: #101010;
+$salmon: #ff9999;
+$dark-salmon: #ff7879;
+$purple-light: #98336e;
+$purple: #553875;
+$blue-gray: #ebf1f7;
+$text: #333;
+$footer-dark: #1d1d1d;
+$transparent: rgba(0,0,1,0);
+
+//Breakpoints
+$xs: 359.98px;
+$ls: 499.98px;
+$sm: 766.98px;
+$md: 991.98px;
+$xl: 1199.98px;
+
+
+//Misc
+$opacity: 0.8;
+
+// Component
+$gradient: linear-gradient(180deg, rgb(85,56,117) 0, rgb(152,51,110) 56%, rgb(195,70,111) 81%, rgb(242,84,134) 100%);
+$hero-gradient: linear-gradient(180deg, rgba(85,56,117, $opacity) 0, rgba(152,51,110, $opacity) 56%, rgba(195,70,111, $opacity) 81%, rgba(242,84,134, $opacity) 100%);
+$black-gradient: linear-gradient(179deg,#2c2f39 2%,#363944 14%,#32353d 100%);
+

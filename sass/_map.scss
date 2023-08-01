@@ -1,0 +1,14 @@
+#map {
+  width: 100%;
+  height: inherit;
+  background-color: inherit;
+
+  >div {
+    background-color: inherit !important;
+  }
+
+  //Removes Satellite/Terrain map switcher and MapData INFO.
+  .gm-style > .gmnoprint:not(.gm-style-cc):not(.gm-bundled-control) {
+    display: none !important;
+  }
+}
